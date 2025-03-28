@@ -1,21 +1,5 @@
-/*
-  ==============================================================================
-
-  This is an automatically generated GUI class created by the Projucer!
-
-  Be careful when adding custom code to these files, as only the code within
-  the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
-  and re-saved.
-
-  Created with Projucer version: 5.4.3
-
-  ------------------------------------------------------------------------------
-
-  The Projucer is part of the JUCE library.
-  Copyright (c) 2017 - ROLI Ltd.
-
-  ==============================================================================
-*/
+// Copyright (C) 2015-2025  Kushview, LLC <info@kushview.net>
+// SPDX-License-Identifier: GPL3-or-later
 
 //[Headers] You can add your own extra header files here...
 //[/Headers]

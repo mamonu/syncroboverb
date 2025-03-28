@@ -1,8 +1,5 @@
-/* =========================================================================================
-
-   This is an auto-generated file: Any edits you make may be overwritten!
-
-*/
+// Copyright (C) 2015-2025  Kushview, LLC <info@kushview.net>
+// SPDX-License-Identifier: GPL3-or-later
 
 #pragma once
 

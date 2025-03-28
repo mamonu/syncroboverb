@@ -1,3 +1,5 @@
+// Copyright (C) 2015-2025  Kushview, LLC <info@kushview.net>
+// SPDX-License-Identifier: GPL3-or-later
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "roboverb.hpp"
