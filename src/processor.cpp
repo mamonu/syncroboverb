@@ -32,9 +32,16 @@ private:
 
 class Processor : public juce::AudioProcessor {
     Roboverb _verb;
-
 public:
-    Processor() : juce::AudioProcessor() {}
+    Processor() : juce::AudioProcessor() {
+        Roboverb::Parameters defaults;
+        addParameter (new AudioParameterFloat ("roomSize", "Room Size", 0.0f, 1.0f, defaults.roomSize));
+        addParameter (new AudioParameterFloat ("damping", "Damping", 0.0f, 1.0f, defaults.damping));
+        addParameter (new AudioParameterFloat ("wetLevel", "Wet Level", 0.0f, 1.0f, defaults.wetLevel));
+        addParameter (new AudioParameterFloat ("dryLevel", "Dry Level", 0.0f, 1.0f, defaults.dryLevel));
+        addParameter (new AudioParameterFloat ("width", "Width", 0.0f, 1.0f, defaults.width));
+    }
+
     ~Processor() override {}
 
     //==============================================================================
@@ -42,7 +49,6 @@ public:
     // virtual StringArray getAlternateDisplayNames() const;
 
     //==============================================================================
-
     void prepareToPlay (double sampleRate, int) override {
         _verb.reset();
         _verb.setSampleRate (sampleRate);
@@ -52,7 +58,52 @@ public:
 
     void memoryWarningReceived() override { jassertfalse; }
 
+    static float valueFor (int paramIndex, const Roboverb::Parameters& ps) {
+        // clang-format off
+        switch (paramIndex) {
+            case Roboverb::RoomSize: return ps.roomSize; break;
+            case Roboverb::Damping:  return ps.damping;  break;
+            case Roboverb::WetLevel: return ps.wetLevel; break;
+            case Roboverb::DryLevel: return ps.dryLevel; break;
+            case Roboverb::Width:    return ps.width;    break;
+        }
+        // clang-format on
+        return 0.0f;
+    }
+
+    static void valueAssign (int paramIndex, Roboverb::Parameters& ps, float value) {
+        // clang-format off
+        switch (paramIndex) {
+            case Roboverb::RoomSize: ps.roomSize = value; break;
+            case Roboverb::Damping:  ps.damping  = value; break;
+            case Roboverb::WetLevel: ps.wetLevel = value; break;
+            case Roboverb::DryLevel: ps.dryLevel = value; break;
+            case Roboverb::Width:    ps.width    = value; break;
+        }
+        // clang-format on
+    }
+
+    void updateParameters() {
+        auto& params (getParameters());
+        auto rparams (_verb.getParameters());
+
+        int numParamChanges = 0;
+        for (int i = 0; i < Roboverb::numParameters; ++i) {
+            auto param = dynamic_cast<AudioParameterFloat*> (params.getUnchecked(i));
+            auto val = param->get();
+            if (juce::exactlyEqual (val, valueFor (i, rparams)))
+                continue;
+            
+            ++numParamChanges;
+            valueAssign (i, rparams, val);
+        }
+
+        if (numParamChanges > 0)
+            _verb.setParameters (rparams);
+    }
+
     void processBlock (AudioBuffer<float>& buffer, MidiBuffer&) override {
+        updateParameters();
         _verb.processStereo (buffer.getWritePointer (0),
                              buffer.getWritePointer (1),
                              buffer.getWritePointer (0),

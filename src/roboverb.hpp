@@ -66,6 +66,7 @@ public:
         float freezeMode; /**< Freeze mode - values < 0.5 are "normal" mode, values > 0.5
                              put the reverb into a continuous feedback loop. */
 
+        Parameters (const Parameters& o) { operator= (o); }
         Parameters& operator= (const Parameters& o) {
             roomSize = o.roomSize;
             damping = o.damping;
@@ -92,7 +93,6 @@ public:
 
     const Parameters& getParameters() const noexcept { return parameters; }
 
-#if ROBOVERB_JUCE
     void swapEnabledCombs (BigInteger& e) {
         for (int i = 0; i < numCombs; ++i)
             enabledCombs[i] = e[i];
@@ -109,7 +109,6 @@ public:
         for (int i = 0; i < numAllPasses; ++i)
             a.setBit (i, enabledAllPasses[i]);
     }
-#endif
 
     void setCombToggle (const int index, const bool toggled) {
         enabledCombs[index] = toggled;
