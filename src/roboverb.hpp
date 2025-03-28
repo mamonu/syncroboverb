@@ -9,15 +9,18 @@
 
 #include <juce_core/juce_core.h>
 
+using juce::BigInteger;
+using juce::Identifier;
+
 namespace Tags {
-static const juce::Identifier roomSize = "roomSize";
-static const juce::Identifier damping = "damping";
-static const juce::Identifier wetLevel = "wetLevel";
-static const juce::Identifier dryLevel = "dryLevel";
-static const juce::Identifier width = "width";
-static const juce::Identifier freezeMode = "freezeMode";
-static const juce::Identifier enabledCombs = "enabledCombs";
-static const juce::Identifier enabledAllPasses = "enabledAllPasses";
+static const Identifier roomSize = "roomSize";
+static const Identifier damping = "damping";
+static const Identifier wetLevel = "wetLevel";
+static const Identifier dryLevel = "dryLevel";
+static const Identifier width = "width";
+static const Identifier freezeMode = "freezeMode";
+static const Identifier enabledCombs = "enabledCombs";
+static const Identifier enabledAllPasses = "enabledAllPasses";
 }; // namespace Tags
 
 class Roboverb {
@@ -29,7 +32,10 @@ public:
         DryLevel,
         Width,
         FreezeMode,
-        numParameters
+        numParameters,
+        numCombs = 8,
+        numAllPasses = 4,
+        numChannels = 2
     };
 
     Roboverb() {
@@ -375,9 +381,7 @@ private:
     };
 
     //==============================================================================
-    enum { numCombs = 8,
-           numAllPasses = 4,
-           numChannels = 2 };
+
     bool enabledCombs[numCombs];
     bool enabledAllPasses[numAllPasses];
 

@@ -15,11 +15,10 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class AboutBox  : public Component
-{
+class AboutBox : public Component {
 public:
     //==============================================================================
-    AboutBox ();
+    AboutBox();
     ~AboutBox();
 
     //==============================================================================
@@ -33,8 +32,6 @@ public:
     void paint (Graphics& g) override;
     void resized() override;
 
-
-
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     String pluginUrl;
@@ -45,11 +42,9 @@ private:
     std::unique_ptr<Label> versionLabel;
     std::unique_ptr<HyperlinkButton> linkButton;
 
-
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AboutBox)
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

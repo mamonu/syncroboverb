@@ -6,18 +6,16 @@
 
 #include "aboutbox.hpp"
 
-
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
 
 //==============================================================================
-AboutBox::AboutBox ()
-{
+AboutBox::AboutBox() {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
     pluginLabel.reset (new Label ("pluginLabel",
-                                  TRANS("Roboverb")));
+                                  TRANS ("Roboverb")));
     addAndMakeVisible (pluginLabel.get());
     pluginLabel->setFont (Font (FontOptions (24.00f, Font::plain)).withTypefaceStyle ("Regular"));
     pluginLabel->setJustificationType (Justification::centred);
@@ -27,7 +25,7 @@ AboutBox::AboutBox ()
     pluginLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     versionLabel.reset (new Label ("versionLabel",
-                                   TRANS("v1.0.2")));
+                                   TRANS ("v1.0.2")));
     addAndMakeVisible (versionLabel.get());
     versionLabel->setFont (Font (FontOptions (15.00f, Font::plain)).withTypefaceStyle ("Regular"));
     versionLabel->setJustificationType (Justification::centred);
@@ -36,26 +34,23 @@ AboutBox::AboutBox ()
     versionLabel->setColour (TextEditor::textColourId, Colours::black);
     versionLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    linkButton.reset (new HyperlinkButton (TRANS("kushview.net"),
+    linkButton.reset (new HyperlinkButton (TRANS ("kushview.net"),
                                            URL ("http://kushview.net")));
     addAndMakeVisible (linkButton.get());
-    linkButton->setTooltip (TRANS("http://kushview.net"));
-    linkButton->setButtonText (TRANS("kushview.net"));
+    linkButton->setTooltip (TRANS ("http://kushview.net"));
+    linkButton->setButtonText (TRANS ("kushview.net"));
     linkButton->setColour (HyperlinkButton::textColourId, Colour (0xcc3677ba));
-
 
     //[UserPreSize]
     //[/UserPreSize]
 
     setSize (300, 176);
 
-
     //[Constructor] You can add your own custom stuff here..
     //[/Constructor]
 }
 
-AboutBox::~AboutBox()
-{
+AboutBox::~AboutBox() {
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
@@ -63,14 +58,12 @@ AboutBox::~AboutBox()
     versionLabel = nullptr;
     linkButton = nullptr;
 
-
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
 }
 
 //==============================================================================
-void AboutBox::paint (Graphics& g)
-{
+void AboutBox::paint (Graphics& g) {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
@@ -80,8 +73,7 @@ void AboutBox::paint (Graphics& g)
     //[/UserPaint]
 }
 
-void AboutBox::resized()
-{
+void AboutBox::resized() {
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
@@ -92,17 +84,13 @@ void AboutBox::resized()
     //[/UserResized]
 }
 
-
-
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-void AboutBox::mouseDown (const MouseEvent&)
-{
+void AboutBox::mouseDown (const MouseEvent&) {
     if (isVisible())
         setVisible (false);
 }
 
-void AboutBox::setPluginName (const String& name)
-{
+void AboutBox::setPluginName (const String& name) {
     pluginLabel->setText (name, dontSendNotification);
 }
 
@@ -110,15 +98,13 @@ void AboutBox::setPluginVersion (const String& versionString) {
     versionLabel->setText (versionString, dontSendNotification);
 }
 
-void AboutBox::setPluginUrl (const String& text, const String& url)
-{
-    linkButton.reset (new HyperlinkButton (text, URL(url)));
+void AboutBox::setPluginUrl (const String& text, const String& url) {
+    linkButton.reset (new HyperlinkButton (text, URL (url)));
     addAndMakeVisible (linkButton.get());
     linkButton->setColour (HyperlinkButton::textColourId, Colour (0xcc3677ba));
     resized();
 }
 //[/MiscUserCode]
-
 
 //==============================================================================
 #if 0
@@ -156,7 +142,5 @@ END_JUCER_METADATA
 */
 #endif
 
-
 //[EndFile] You can add extra defines here...
 //[/EndFile]
-

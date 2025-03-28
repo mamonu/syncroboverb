@@ -4,16 +4,14 @@
 #ifndef SPHERESCOPE_H_INCLUDED
 #define SPHERESCOPE_H_INCLUDED
 
-#define SPHERE_DECAY_RATE    (1.0f - 3E-6f)
+#define SPHERE_DECAY_RATE (1.0f - 3E-6f)
 
 #include "juce.hpp"
 #include "res.hpp"
 
-class SphereScope : public Component
-{
+class SphereScope : public Component {
 public:
-    SphereScope()
-    {
+    SphereScope() {
         img = ImageCache::getFromMemory (res::sphere_scope_png,
                                          res::sphere_scope_pngSize);
         numSteps = img.getHeight() / img.getWidth();
@@ -23,21 +21,17 @@ public:
         peakHold = 0;
     }
 
-    ~SphereScope() { }
+    ~SphereScope() {}
 
-    inline void setValue (const float val)
-    {
+    inline void setValue (const float val) {
         value = 10.f + Decibels::gainToDecibels (val, -70.0f);
         int level = getIECScale (value);
-        if (peak < level)
-        {
+        if (peak < level) {
             peak = level;
             peakHold = 0;
             peakDecay = SPHERE_DECAY_RATE;
 
-        }
-        else if (++peakHold > 16)
-        {
+        } else if (++peakHold > 16) {
             peak = int (float (peak * peakDecay));
             if (peak < level) {
                 peak = level;
@@ -47,18 +41,14 @@ public:
         }
     }
 
-    inline void paint (Graphics& g) override
-    {
-        g.drawImage(img, 0, 0, getWidth(), getHeight(),
-                         0, img.getWidth() * peak,
-                         img.getWidth(), img.getWidth());
+    inline void paint (Graphics& g) override {
+        g.drawImage (img, 0, 0, getWidth(), getHeight(), 0, img.getWidth() * peak, img.getWidth(), img.getWidth());
         /* g.setColour (Colours::white);
         g.drawFittedText(String(getIECScale(value)), 0, 0, getWidth(), getHeight(),
                           Justification::centred, 1); */
     }
 
-    inline int getIECScale (const float dB) const
-    {
+    inline int getIECScale (const float dB) const {
         float defaultScale = 1.0;
 
         if (dB < -70.0)
@@ -92,6 +82,4 @@ private:
     float peakDecay;
 };
 
-
-
-#endif  // SPHERESCOPE_H_INCLUDED
+#endif // SPHERESCOPE_H_INCLUDED
