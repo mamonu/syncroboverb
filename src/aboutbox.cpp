@@ -24,8 +24,7 @@ AboutBox::AboutBox() {
     pluginLabel->setColour (TextEditor::textColourId, Colours::black);
     pluginLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    versionLabel.reset (new Label ("versionLabel",
-                                   TRANS ("v1.0.2")));
+    versionLabel.reset (new Label ("versionLabel", TRANS ("v1.0.2")));
     addAndMakeVisible (versionLabel.get());
     versionLabel->setFont (Font (FontOptions (15.00f, Font::plain)).withTypefaceStyle ("Regular"));
     versionLabel->setJustificationType (Justification::centred);
@@ -34,8 +33,7 @@ AboutBox::AboutBox() {
     versionLabel->setColour (TextEditor::textColourId, Colours::black);
     versionLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    linkButton.reset (new HyperlinkButton (TRANS ("kushview.net"),
-                                           URL ("http://kushview.net")));
+    linkButton.reset (new HyperlinkButton (TRANS ("kushview.net"), URL ("http://kushview.net")));
     addAndMakeVisible (linkButton.get());
     linkButton->setTooltip (TRANS ("http://kushview.net"));
     linkButton->setButtonText (TRANS ("kushview.net"));

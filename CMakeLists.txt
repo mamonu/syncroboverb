@@ -1,7 +1,7 @@
 # Roboverb CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.22)
-project(Roboverb VERSION 2.0.0)
+project(Roboverb VERSION 1.2.0)
 
 add_subdirectory(deps/JUCE)
 add_subdirectory(deps/clap-juce-extensions EXCLUDE_FROM_ALL)
