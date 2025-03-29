@@ -1,13 +1,14 @@
 // Copyright (C) 2015-2025  Kushview, LLC <info@kushview.net>
 // SPDX-License-Identifier: GPL3-or-later
 
-#ifndef SPHERESCOPE_H_INCLUDED
-#define SPHERESCOPE_H_INCLUDED
+#pragma once
 
 #define SPHERE_DECAY_RATE (1.0f - 3E-6f)
 
 #include "juce.hpp"
 #include "res.hpp"
+
+namespace roboverb {
 
 class SphereScope : public Component {
 public:
@@ -82,4 +83,4 @@ private:
     float peakDecay;
 };
 
-#endif // SPHERESCOPE_H_INCLUDED
+}

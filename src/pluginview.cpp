@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: GPL3-or-later
 
 #include "roboverb.hpp"
-#include "ui/spherescope.hpp"
-#include "ui/aboutbox.hpp"
-#include "ui/pluginview.hpp"
+#include "spherescope.hpp"
+#include "aboutbox.hpp"
+#include "pluginview.hpp"
 
+namespace roboverb {
 //==============================================================================
 PluginView::PluginView() {
     //[Constructor_pre] You can add your own custom stuff here..
@@ -529,135 +530,5 @@ void PluginView::mouseDown (const MouseEvent& ev) {
         about.setVisible (false);
     Component::mouseDown (ev);
 }
-//[/MiscUserCode]
 
-//==============================================================================
-#if 0
-/*  -- Projucer information section --
-
-    This is where the Projucer stores the metadata that describe this GUI layout, so
-    make changes in here at your peril!
-
-BEGIN_JUCER_METADATA
-
-<JUCER_COMPONENT documentType="Component" className="PluginView" componentName=""
-                 parentClasses="public Component, private ValueTree::Listener"
-                 constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
-                 snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="360"
-                 initialHeight="210">
-  <BACKGROUND backgroundColour="ff2d2b24">
-    <IMAGE pos="0 0 100% 100%" resource="res::roboverb_bg_jpg" opacity="1.0"
-           mode="0"/>
-    <RECT pos="0 0 100% 100%" fill=" radial: 56 -56, 424 224, 0=a35c0000, 1=aa401818"
-          hasStroke="0"/>
-  </BACKGROUND>
-  <GENERICCOMPONENT name="sphere" id="4672cf09df25d92f" memberName="sphere" virtualName="SphereScope"
-                    explicitFocusOrder="0" pos="130 18 96 94" class="Component" params=""/>
-  <TOGGLEBUTTON name="comb4" id="1b56d74e200d200a" memberName="comb4" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="318 50 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="frozen" id="b5b45bb641f23158" memberName="frozen" virtualName=""
-                explicitFocusOrder="0" pos="176 176 104 24" txtcol="ffe4e4e4"
-                buttonText="Frozen" connectedEdges="0" needsCallback="1" radioGroupId="0"
-                state="0"/>
-  <LABEL name="roomSizeLabel" id="9c584537021a4c92" memberName="roomSizeLabel"
-         virtualName="" explicitFocusOrder="0" pos="13 159 56 24" textCol="e4dfddaf"
-         edTextCol="ff000000" edBkgCol="0" labelText="Room Size" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12.0" kerning="0.0" bold="0" italic="0" justification="36"/>
-  <LABEL name="dampingLabel" id="102f11db8649f0a8" memberName="dampingLabel"
-         virtualName="" explicitFocusOrder="0" pos="72 159 56 24" textCol="e4dfddaf"
-         edTextCol="ff000000" edBkgCol="0" labelText="Damping" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12.0" kerning="0.0" bold="0" italic="0" justification="36"/>
-  <LABEL name="wetLabel" id="193cc8bfd3ef648e" memberName="wetLabel" virtualName=""
-         explicitFocusOrder="0" pos="14 94 56 24" textCol="e4dfddaf" edTextCol="ff000000"
-         edBkgCol="0" labelText="Wet" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
-         kerning="0.0" bold="0" italic="0" justification="36"/>
-  <LABEL name="dryLabel" id="8f9c5d2033dcb149" memberName="dryLabel" virtualName=""
-         explicitFocusOrder="0" pos="64 94 72 24" textCol="e4dfddaf" edTextCol="ff000000"
-         edBkgCol="0" labelText="Dry" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
-         kerning="0.0" bold="0" italic="0" justification="36"/>
-  <LABEL name="widthLabel" id="b5e5129090968ba2" memberName="widthLabel"
-         virtualName="" explicitFocusOrder="0" pos="131 159 56 24" tooltip="Width"
-         textCol="e4dfddaf" edTextCol="ff000000" edBkgCol="0" labelText="Width"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="12.0" kerning="0.0" bold="0"
-         italic="0" justification="36"/>
-  <TOGGLEBUTTON name="comb1" id="10f369ee64dc606a" memberName="comb1" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="219 50 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="comb2" id="3764a52bf0c0c270" memberName="comb2" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="252 50 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="comb5" id="84eff46ba18183d3" memberName="comb5" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="219 87 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="comb6" id="51298beb77515717" memberName="comb6" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="252 87 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="comb3" id="ce5ceb453a90039b" memberName="comb3" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="285 50 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="comb7" id="bded4b7757f9b1f0" memberName="comb7" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="285 87 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="comb8" id="31ca9d756f9bb291" memberName="comb8" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="318 87 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="allpass1" id="2254b724ccf48cf5" memberName="allpass1" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="219 124 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="allpass2" id="3ab1aa0ce31d54e7" memberName="allpass2" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="252 124 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="allpass3" id="b38aa8a508e947" memberName="allpass3" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="285 124 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <TOGGLEBUTTON name="allpass4" id="6573319772fb73a6" memberName="allpass4" virtualName="ToggleSwitch"
-                explicitFocusOrder="0" pos="318 124 40 40" buttonText="" connectedEdges="0"
-                needsCallback="1" radioGroupId="0" state="0"/>
-  <LABEL name="new label" id="eb1801d07e80ba9d" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="221 159 136 24" textCol="e4dfddaf"
-         edTextCol="ff000000" edBkgCol="0" labelText="Chambers&#10;" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12.0" kerning="0.0" bold="0" italic="0" justification="36"/>
-  <LABEL name="new label" id="3d2124da91d9b2f0" memberName="label3" virtualName=""
-         explicitFocusOrder="0" pos="270 20 78 24" textCol="d9dfddaf"
-         edTextCol="ff000000" edBkgCol="0" labelText="ROBOVERB" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="16.0" kerning="0.0" bold="0" italic="0" justification="34"/>
-  <TEXTBUTTON name="helpButton" id="545fc9f3f2bf952a" memberName="helpButton"
-              virtualName="" explicitFocusOrder="0" pos="9 23 18 18" bgColOff="e1111111"
-              bgColOn="ff111111" textCol="e7e5e5e5" textColOn="dee5e5e5" buttonText="?"
-              connectedEdges="15" needsCallback="1" radioGroupId="0"/>
-  <SLIDER name="wetLevel" id="60f92ab9097a3a68" memberName="wetLevel" virtualName="SkinDial"
-          explicitFocusOrder="0" pos="14 46 56 56" min="0.0" max="1.0"
-          int="0.0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
-  <SLIDER name="dryLevel" id="71c4babfc54096a3" memberName="dryLevel" virtualName="SkinDial"
-          explicitFocusOrder="0" pos="73 46 56 56" min="0.0" max="1.0"
-          int="0.0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
-  <SLIDER name="roomSize" id="4818250426324d72" memberName="roomSize" virtualName="SkinDial"
-          explicitFocusOrder="0" pos="13 111 56 56" min="0.0" max="1.0"
-          int="0.0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
-  <SLIDER name="damping" id="36e7b175ad3e7b34" memberName="damping" virtualName="SkinDial"
-          explicitFocusOrder="0" pos="72 111 56 56" min="0.0" max="1.0"
-          int="0.0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
-  <SLIDER name="width" id="eb11bcc99f28a586" memberName="width" virtualName="SkinDial"
-          explicitFocusOrder="0" pos="131 111 56 56" min="0.0" max="1.0"
-          int="0.0" style="RotaryVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="0"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
-</JUCER_COMPONENT>
-
-END_JUCER_METADATA
-*/
-#endif
-
-//[EndFile] You can add extra defines here...
-//[/EndFile]
+}

@@ -32,8 +32,13 @@ target_sources(Roboverb
         src/roboverb.cpp
         src/processor.cpp
         src/res.cpp
-        src/ui/aboutbox.cpp
-        src/ui/pluginview.cpp)
+        src/editor.cpp
+        src/aboutbox.cpp
+        src/pluginview.cpp)
+
+if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    target_compile_options(Roboverb PUBLIC -Wno-unused-parameter -Wno-overloaded-virtual)
+endif()
 
 target_compile_definitions(Roboverb
     PUBLIC

@@ -8,6 +8,8 @@
 #include "res.hpp"
 #include <juce_gui_basics/juce_gui_basics.h>
 
+namespace roboverb {
+
 class SphereScope;
 
 class SkinDial : public Slider {
@@ -108,16 +110,6 @@ private:
     Image img;
 };
 
-//[/Headers]
-
-//==============================================================================
-/**
-                                                                    //[Comments]
-    An auto-generated component, created by the Introjucer.
-
-    Describe your class and how it works here!
-                                                                    //[/Comments]
-*/
 class PluginView : public Component,
                    private ValueTree::Listener,
                    public Button::Listener,
@@ -190,5 +182,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginView)
 };
 
-//[EndFile] You can add extra defines here...
-//[/EndFile]
+}

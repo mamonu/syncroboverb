@@ -182,69 +182,73 @@ public:
         }
     }
 
-    void processStereo (float* const left, float* const right,
-                        float* const out1, float* const out2,
-                        const int numSamples) noexcept {
-        // jassert (left != nullptr && right != nullptr);
+    void processStereo (float* const left, float* const right, const int numSamples) noexcept
+    {
+        jassert (left != nullptr && right != nullptr);
 
-        for (int i = 0; i < numSamples; ++i) {
+        for (int i = 0; i < numSamples; ++i)
+        {
             const float input = (left[i] + right[i]) * gain;
             float outL = 0, outR = 0;
 
-            const float damp = damping.getNextValue();
+            const float damp    = damping.getNextValue();
             const float feedbck = feedback.getNextValue();
 
-            for (int j = 0; j < numCombs; ++j) // accumulate the comb filters in parallel
+            for (int j = 0; j < numCombs; ++j)  // accumulate the comb filters in parallel
             {
-                if (! enabledCombs[j])
+                if (! enabledCombs [j])
                     continue;
                 outL += comb[0][j].process (input, damp, feedbck);
                 outR += comb[1][j].process (input, damp, feedbck);
             }
 
-            for (int j = 0; j < numAllPasses; ++j) // run the allpass filters in series
+            for (int j = 0; j < numAllPasses; ++j)  // run the allpass filters in series
             {
-                if (! enabledAllPasses[j])
+                if ( ! enabledAllPasses [j])
                     continue;
                 outL = allPass[0][j].process (outL);
                 outR = allPass[1][j].process (outR);
             }
 
-            const float dry = dryGain.getNextValue();
+            const float dry  = dryGain.getNextValue();
             const float wet1 = wetGain1.getNextValue();
             const float wet2 = wetGain2.getNextValue();
 
-            out1[i] = outL * wet1 + outR * wet2 + left[i] * dry;
-            out2[i] = outR * wet1 + outL * wet2 + right[i] * dry;
+            left[i]  = outL * wet1 + outR * wet2 + left[i]  * dry;
+            right[i] = outR * wet1 + outL * wet2 + right[i] * dry;
         }
     }
 
     /** Applies the reverb to a single mono channel of audio data. */
-    void processMono (float* const samples, const int numSamples) noexcept {
-        // jassert (samples != nullptr);
+    void processMono (float* const samples, const int numSamples) noexcept
+    {
+        jassert (samples != nullptr);
 
-        for (int i = 0; i < numSamples; ++i) {
+        for (int i = 0; i < numSamples; ++i)
+        {
             const float input = samples[i] * gain;
             float output = 0;
 
-            const float damp = damping.getNextValue();
+            const float damp    = damping.getNextValue();
             const float feedbck = feedback.getNextValue();
 
-            for (int j = 0; j < numCombs; ++j) {
+            for (int j = 0; j < numCombs; ++j)
+            {
                 // accumulate the comb filters in parallel
-                if (! enabledCombs[j])
+                if (! enabledCombs [j])
                     continue;
                 output += comb[0][j].process (input, damp, feedbck);
             }
 
-            for (int j = 0; j < numAllPasses; ++j) {
+            for (int j = 0; j < numAllPasses; ++j)
+            {
                 // run the allpass filters in series
-                if (! enabledAllPasses[j])
+                if ( ! enabledAllPasses [j])
                     continue;
                 output = allPass[0][j].process (output);
             }
 
-            const float dry = dryGain.getNextValue();
+            const float dry  = dryGain.getNextValue();
             const float wet1 = wetGain1.getNextValue();
 
             samples[i] = output * wet1 + samples[i] * dry;
