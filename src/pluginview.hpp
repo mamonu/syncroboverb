@@ -123,6 +123,7 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     void stabilizeComponents (ValueTree pluginState);
     void setSphereValue (const float val);
+    void updateParameterValueDisplays ();
     void mouseDown (const MouseEvent& ev) override;
     //[/UserMethods]
 
@@ -177,6 +178,20 @@ private:
     std::unique_ptr<SkinDial> damping;
     std::unique_ptr<SkinDial> width;
     std::unique_ptr<Drawable> drawable1;
+
+    // Randomization controls
+    std::unique_ptr<ToggleSwitch> randomEnabled;
+    std::unique_ptr<SkinDial> randomRate;
+    std::unique_ptr<SkinDial> randomAmount;
+    std::unique_ptr<SkinDial> randomFilters;
+    std::unique_ptr<Label> randomEnabledLabel;
+    std::unique_ptr<Label> randomRateLabel;
+    std::unique_ptr<Label> randomAmountLabel;
+    std::unique_ptr<Label> randomFiltersLabel;
+    std::unique_ptr<Label> randomRateValueLabel;
+    std::unique_ptr<Label> randomAmountValueLabel;
+    std::unique_ptr<Label> randomFiltersValueLabel;
+    std::unique_ptr<Label> randomEnabledStateLabel;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginView)

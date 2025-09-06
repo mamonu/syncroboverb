@@ -12,6 +12,7 @@ void TempoSyncedRandomizer::processTempo(double bpm, double ppqPosition, SyncRob
     if (ppqPosition - lastPpqPosition >= interval) {
         randomizeSwitches(verb);
         lastPpqPosition = ppqPosition;
+        switchesChanged = true;  // Mark that switches have been randomized
     }
 }
 
@@ -54,5 +55,19 @@ void TempoSyncedRandomizer::randomizeSwitches(SyncRoboVerb& verb) {
                 }
             }
             break;
+    }
+}
+
+void TempoSyncedRandomizer::getUpdatedSwitchStates(SyncRoboVerb& verb, BigInteger& combs, BigInteger& allpasses) {
+    // Get current switch states from the reverb object
+    combs.clear();
+    allpasses.clear();
+    
+    for (int i = 0; i < SyncRoboVerb::numCombs; ++i) {
+        combs.setBit(i, verb.toggledCombFloat(i) > 0.5f);
+    }
+    
+    for (int i = 0; i < SyncRoboVerb::numAllPasses; ++i) {
+        allpasses.setBit(i, verb.toggledAllPassFloat(i) > 0.5f);
     }
 }

@@ -67,7 +67,17 @@ private:
 
     Atomic<float> rmsValue;
 
+    // For reliable UI updates from audio thread
+    String pendingCombsUpdate;
+    String pendingAllPassesUpdate; 
+    Atomic<bool> hasPendingUIUpdate { false };
+
     void updateState();
+    
+public:
+    void processPendingUIUpdates();
+    
+private:
 
     void valueTreePropertyChanged (ValueTree&, const Identifier&) override;
     void valueTreeChildAdded (ValueTree&, ValueTree&) override {}

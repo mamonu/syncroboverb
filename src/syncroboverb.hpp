@@ -58,12 +58,22 @@ public:
         rate = QuarterNote;
         amount = 0.5f;
         filterType = Both;
+        switchesChanged = false;
     }
     
-    void setEnabled(bool shouldBeEnabled) { enabled = shouldBeEnabled; }
-    void setRate(RandomRate newRate) { rate = newRate; }
+    void setEnabled(bool shouldBeEnabled) { 
+        enabled = shouldBeEnabled; 
+        if (enabled) lastPpqPosition = 0.0; // Reset timing when enabled
+    }
+    void setRate(RandomRate newRate) { 
+        rate = newRate; 
+        lastPpqPosition = 0.0; // Reset timing when rate changes
+    }
     void setAmount(float newAmount) { amount = juce::jlimit(0.0f, 1.0f, newAmount); }
-    void setFilterType(FilterType newType) { filterType = newType; }
+    void setFilterType(FilterType newType) { 
+        filterType = newType; 
+        lastPpqPosition = 0.0; // Reset timing when filter type changes
+    }
     
     bool isEnabled() const { return enabled; }
     RandomRate getRate() const { return rate; }
@@ -72,6 +82,16 @@ public:
     
     void processTempo(double bpm, double ppqPosition, class SyncRoboVerb& verb);
     
+    // Get the updated switch states after randomization for UI updates
+    void getUpdatedSwitchStates(class SyncRoboVerb& verb, BigInteger& combs, BigInteger& allpasses);
+    
+    // Check if switches have changed and clear the flag
+    bool checkAndClearSwitchesChanged() {
+        bool changed = switchesChanged;
+        switchesChanged = false;
+        return changed;
+    }
+    
 private:
     bool enabled;
     RandomRate rate;
@@ -79,6 +99,7 @@ private:
     FilterType filterType;
     double lastPpqPosition;
     juce::Random rng;
+    bool switchesChanged;
     
     double getRateInQuarterNotes() const {
         switch (rate) {

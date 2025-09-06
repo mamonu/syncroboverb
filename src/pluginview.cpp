@@ -195,7 +195,7 @@ PluginView::PluginView() {
     label3->setColour (TextEditor::textColourId, Colours::black);
     label3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    label3->setBounds (270, 20, 78, 24);
+    label3->setBounds (270, 20, 120, 24);
 
     helpButton.reset (new TextButton ("helpButton"));
     addAndMakeVisible (helpButton.get());
@@ -254,6 +254,118 @@ PluginView::PluginView() {
 
     width->setBounds (131, 111, 56, 56);
 
+    // Randomization controls
+    randomEnabled.reset (new ToggleSwitch ("randomEnabled"));
+    addAndMakeVisible (randomEnabled.get());
+    randomEnabled->setButtonText (String());
+    randomEnabled->addListener (this);
+    randomEnabled->setBounds (380, 50, 40, 40);
+
+    randomEnabledLabel.reset (new Label ("randomEnabledLabel", TRANS ("Random")));
+    addAndMakeVisible (randomEnabledLabel.get());
+    randomEnabledLabel->setFont (Font (FontOptions (12.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomEnabledLabel->setJustificationType (Justification::centred);
+    randomEnabledLabel->setEditable (false, false, false);
+    randomEnabledLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomEnabledLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomEnabledLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomEnabledLabel->setBounds (360, 94, 80, 24);
+
+    randomRate.reset (new SkinDial ("randomRate"));
+    addAndMakeVisible (randomRate.get());
+    randomRate->setRange (0, 7, 1);
+    randomRate->setSliderStyle (Slider::RotaryVerticalDrag);
+    randomRate->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
+    randomRate->addListener (this);
+    randomRate->setBounds (460, 46, 56, 56);
+
+    randomRateLabel.reset (new Label ("randomRateLabel", TRANS ("Rate")));
+    addAndMakeVisible (randomRateLabel.get());
+    randomRateLabel->setFont (Font (FontOptions (12.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomRateLabel->setJustificationType (Justification::centred);
+    randomRateLabel->setEditable (false, false, false);
+    randomRateLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomRateLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomRateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomRateLabel->setBounds (460, 104, 56, 24);
+
+    randomAmount.reset (new SkinDial ("randomAmount"));
+    addAndMakeVisible (randomAmount.get());
+    randomAmount->setRange (0, 1, 0);
+    randomAmount->setSliderStyle (Slider::RotaryVerticalDrag);
+    randomAmount->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
+    randomAmount->addListener (this);
+    randomAmount->setBounds (540, 46, 56, 56);
+
+    randomAmountLabel.reset (new Label ("randomAmountLabel", TRANS ("Amount")));
+    addAndMakeVisible (randomAmountLabel.get());
+    randomAmountLabel->setFont (Font (FontOptions (12.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomAmountLabel->setJustificationType (Justification::centred);
+    randomAmountLabel->setEditable (false, false, false);
+    randomAmountLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomAmountLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomAmountLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomAmountLabel->setBounds (540, 104, 56, 24);
+
+    randomFilters.reset (new SkinDial ("randomFilters"));
+    addAndMakeVisible (randomFilters.get());
+    randomFilters->setRange (0, 2, 1);
+    randomFilters->setValue (2.0, dontSendNotification);  // Default to BOTH
+    randomFilters->setSliderStyle (Slider::RotaryVerticalDrag);
+    randomFilters->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
+    randomFilters->addListener (this);
+    randomFilters->setBounds (620, 46, 56, 56);
+
+    randomFiltersLabel.reset (new Label ("randomFiltersLabel", TRANS ("Filters")));
+    addAndMakeVisible (randomFiltersLabel.get());
+    randomFiltersLabel->setFont (Font (FontOptions (12.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomFiltersLabel->setJustificationType (Justification::centred);
+    randomFiltersLabel->setEditable (false, false, false);
+    randomFiltersLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomFiltersLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomFiltersLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomFiltersLabel->setBounds (620, 104, 56, 24);
+
+    randomRateValueLabel.reset (new Label ("randomRateValueLabel", TRANS ("1/4")));
+    addAndMakeVisible (randomRateValueLabel.get());
+    randomRateValueLabel->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomRateValueLabel->setJustificationType (Justification::centred);
+    randomRateValueLabel->setEditable (false, false, false);
+    randomRateValueLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomRateValueLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomRateValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomRateValueLabel->setBounds (460, 120, 56, 16);
+
+    randomAmountValueLabel.reset (new Label ("randomAmountValueLabel", TRANS ("50%")));
+    addAndMakeVisible (randomAmountValueLabel.get());
+    randomAmountValueLabel->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomAmountValueLabel->setJustificationType (Justification::centred);
+    randomAmountValueLabel->setEditable (false, false, false);
+    randomAmountValueLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomAmountValueLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomAmountValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomAmountValueLabel->setBounds (540, 120, 56, 16);
+
+    randomFiltersValueLabel.reset (new Label ("randomFiltersValueLabel", TRANS ("BOTH")));
+    addAndMakeVisible (randomFiltersValueLabel.get());
+    randomFiltersValueLabel->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomFiltersValueLabel->setJustificationType (Justification::centred);
+    randomFiltersValueLabel->setEditable (false, false, false);
+    randomFiltersValueLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomFiltersValueLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomFiltersValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomFiltersValueLabel->setBounds (620, 120, 56, 16);
+
+    randomEnabledStateLabel.reset (new Label ("randomEnabledStateLabel", TRANS ("OFF")));
+    addAndMakeVisible (randomEnabledStateLabel.get());
+    randomEnabledStateLabel->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    randomEnabledStateLabel->setJustificationType (Justification::centred);
+    randomEnabledStateLabel->setEditable (false, false, false);
+    randomEnabledStateLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    randomEnabledStateLabel->setColour (TextEditor::textColourId, Colours::black);
+    randomEnabledStateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    randomEnabledStateLabel->setBounds (380, 110, 40, 16);
+
     drawable1 = Drawable::createFromImageData (res::roboverb_bg_jpg, res::roboverb_bg_jpgSize);
 
     //[UserPreSize]
@@ -280,11 +392,11 @@ PluginView::PluginView() {
     }
     //[/UserPreSize]
 
-    setSize (360, 210);
+    setSize (720, 220);
 
     //[Constructor] You can add your own custom stuff here..
-    about.setPluginName (JucePlugin_Name);
-    about.setPluginVersion (JucePlugin_VersionString);
+    about.setPluginName ("SyncRoboVerb");
+    about.setPluginVersion ("1.2.0");
     about.setPluginUrl ("Kushview, LLC", "https://kushview.net/products/syncroboverb");
     pluginState.addListener (this);
     //[/Constructor]
@@ -325,6 +437,20 @@ PluginView::~PluginView() {
     damping = nullptr;
     width = nullptr;
     drawable1 = nullptr;
+
+    // Randomization controls
+    randomEnabled = nullptr;
+    randomRate = nullptr;
+    randomAmount = nullptr;
+    randomFilters = nullptr;
+    randomEnabledLabel = nullptr;
+    randomRateLabel = nullptr;
+    randomAmountLabel = nullptr;
+    randomFiltersLabel = nullptr;
+    randomRateValueLabel = nullptr;
+    randomAmountValueLabel = nullptr;
+    randomFiltersValueLabel = nullptr;
+    randomEnabledStateLabel = nullptr;
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
@@ -439,6 +565,11 @@ void PluginView::buttonClicked (Button* buttonThatWasClicked) {
             about.setVisible (false);
         }
         //[/UserButtonCode_helpButton]
+    } else if (buttonThatWasClicked == randomEnabled.get()) {
+        //[UserButtonCode_randomEnabled] -- add your button handler code here..
+        pluginState.setProperty (Tags::randomEnabled, randomEnabled->getToggleState() ? 1.0f : 0.0f, nullptr);
+        updateParameterValueDisplays ();
+        //[/UserButtonCode_randomEnabled]
     }
 
     //[UserbuttonClicked_Post]
@@ -464,6 +595,21 @@ void PluginView::sliderValueChanged (Slider* sliderThatWasMoved) {
     } else if (sliderThatWasMoved == width.get()) {
         //[UserSliderCode_width] -- add your slider handling code here..
         //[/UserSliderCode_width]
+    } else if (sliderThatWasMoved == randomRate.get()) {
+        //[UserSliderCode_randomRate] -- add your slider handling code here..
+        pluginState.setProperty (Tags::randomRate, (float)randomRate->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_randomRate]
+    } else if (sliderThatWasMoved == randomAmount.get()) {
+        //[UserSliderCode_randomAmount] -- add your slider handling code here..
+        pluginState.setProperty (Tags::randomAmount, (float)randomAmount->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_randomAmount]
+    } else if (sliderThatWasMoved == randomFilters.get()) {
+        //[UserSliderCode_randomFilters] -- add your slider handling code here..
+        pluginState.setProperty (Tags::randomFilters, (float)randomFilters->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_randomFilters]
     }
 
     //[UsersliderValueChanged_Post]
@@ -502,6 +648,26 @@ void PluginView::stabilizeComponents (ValueTree newPluginState) {
         combButtons.getUnchecked (i)->setToggleState (combs[i], dontSendNotification);
     for (int i = 0; i < allPassButtons.size(); ++i)
         allPassButtons.getUnchecked (i)->setToggleState (allpasses[i], dontSendNotification);
+
+    // Randomization controls
+    randomEnabled->setToggleState ((float)pluginState.getProperty (Tags::randomEnabled) > 0.5f, dontSendNotification);
+    randomEnabled->getToggleStateValue().referTo (
+        pluginState.getPropertyAsValue (Tags::randomEnabled, nullptr));
+
+    randomRate->setValue (pluginState.getProperty (Tags::randomRate), dontSendNotification);
+    randomRate->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::randomRate, nullptr));
+
+    randomAmount->setValue (pluginState.getProperty (Tags::randomAmount), dontSendNotification);
+    randomAmount->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::randomAmount, nullptr));
+
+    randomFilters->setValue (pluginState.getProperty (Tags::randomFilters), dontSendNotification);
+    randomFilters->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::randomFilters, nullptr));
+
+    // Update parameter value displays
+    updateParameterValueDisplays ();
 }
 
 void PluginView::valueTreePropertyChanged (ValueTree& tree, const Identifier& property) {
@@ -517,12 +683,58 @@ void PluginView::valueTreePropertyChanged (ValueTree& tree, const Identifier& pr
         allpasses.parseString (value.toString(), 2);
         for (int i = 0; i < allPassButtons.size(); ++i)
             allPassButtons.getUnchecked (i)->setToggleState (allpasses[i], dontSendNotification);
+    } else if (property == Tags::randomEnabled) {
+        randomEnabled->setToggleState ((float)value > 0.5f, dontSendNotification);
+    } else if (property == Tags::randomRate) {
+        randomRate->setValue (value, dontSendNotification);
+    } else if (property == Tags::randomAmount) {
+        randomAmount->setValue (value, dontSendNotification);
+    } else if (property == Tags::randomFilters) {
+        randomFilters->setValue (value, dontSendNotification);
     }
 }
 
 void PluginView::setSphereValue (const float val) {
     sphere->setValue (val);
     sphere->repaint();
+}
+
+void PluginView::updateParameterValueDisplays () {
+    // Update rate display
+    int rateValue = (int)randomRate->getValue();
+    String rateText;
+    switch (rateValue) {
+        case 0: rateText = "1/16"; break;
+        case 1: rateText = "1/8"; break;
+        case 2: rateText = "1/4"; break;
+        case 3: rateText = "1/2"; break;
+        case 4: rateText = "1"; break;
+        case 5: rateText = "2 bars"; break;
+        case 6: rateText = "4 bars"; break;
+        case 7: rateText = "8 bars"; break;
+        default: rateText = "1/4"; break;
+    }
+    randomRateValueLabel->setText (rateText, dontSendNotification);
+
+    // Update amount display  
+    int amountPercent = (int)(randomAmount->getValue() * 100.0f);
+    String amountText = String(amountPercent) + "%";
+    randomAmountValueLabel->setText (amountText, dontSendNotification);
+
+    // Update filters display
+    int filtersValue = (int)randomFilters->getValue();
+    String filtersText;
+    switch (filtersValue) {
+        case 0: filtersText = "COMB"; break;
+        case 1: filtersText = "ALLPASS"; break;
+        case 2: filtersText = "BOTH"; break;
+        default: filtersText = "BOTH"; break;
+    }
+    randomFiltersValueLabel->setText (filtersText, dontSendNotification);
+
+    // Update enabled state display
+    String stateText = randomEnabled->getToggleState() ? "ON" : "OFF";
+    randomEnabledStateLabel->setText (stateText, dontSendNotification);
 }
 
 void PluginView::mouseDown (const MouseEvent& ev) {

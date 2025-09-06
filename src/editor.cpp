@@ -37,5 +37,7 @@ void Editor::resized()
 void Editor::timerCallback()
 {
     view->setSphereValue (processor.getRMS());
+    view->updateParameterValueDisplays ();
+    processor.processPendingUIUpdates(); // Process any pending switch updates
 }
 }

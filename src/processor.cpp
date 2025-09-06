@@ -182,23 +182,56 @@ String Processor::getParameterText (int index, int maxLen) {
 
     switch (index) {
         case SyncRoboVerb::RoomSize:
-            return "Room size (text)";
+            return String(params.roomSize, 2);
             break;
         case SyncRoboVerb::Damping:
-            return "Damping (text)";
+            return String(params.damping, 2);
             break;
         case SyncRoboVerb::WetLevel:
-            return "Wet level (text)";
+            return String(params.wetLevel, 2);
             break;
         case SyncRoboVerb::DryLevel:
-            return "Dry level (text)";
+            return String(params.dryLevel, 2);
             break;
         case SyncRoboVerb::Width:
-            return "Width (text)";
+            return String(params.width, 2);
             break;
         case SyncRoboVerb::FreezeMode:
-            return "Freeze mode (text)";
+            return params.freezeMode >= 0.5f ? "On" : "Off";
             break;
+        case SyncRoboVerb::RandomEnabled:
+            return params.randomEnabled >= 0.5f ? "On" : "Off";
+            break;
+        case SyncRoboVerb::RandomRate:
+        {
+            int rateValue = (int)params.randomRate;
+            switch (rateValue) {
+                case 0: return "1/16";
+                case 1: return "1/8";
+                case 2: return "1/4";
+                case 3: return "1/2";
+                case 4: return "1";
+                case 5: return "2 bars";
+                case 6: return "4 bars";
+                case 7: return "8 bars";
+                default: return "1/4";
+            }
+            break;
+        }
+        case SyncRoboVerb::RandomAmount:
+            return String((int)(params.randomAmount * 100.0f)) + "%";
+            break;
+        case SyncRoboVerb::RandomFilters:
+        {
+            int filtersValue = (int)params.randomFilters;
+            switch (filtersValue) {
+                case 0: return "Comb";
+                case 1: return "AllPass";
+                case 2: return "Both";
+                default: return "Both";
+            }
+            break;
+        }
     }
 
     return String();
@@ -253,6 +286,18 @@ void Processor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&) {
             double bpm = positionInfo->getBpm().orFallback(150.0);
             double ppqPosition = positionInfo->getPpqPosition().orFallback(0.0);
             verb.getRandomizer().processTempo(bpm, ppqPosition, verb);
+            
+            // Check if randomization has changed switches and update UI
+            if (verb.getRandomizer().checkAndClearSwitchesChanged()) {
+                // Capture the current switch states immediately
+                BigInteger newCombs, newAllPasses;
+                verb.getRandomizer().getUpdatedSwitchStates(verb, newCombs, newAllPasses);
+                
+                // Store for later UI update (safer than async)
+                pendingCombsUpdate = newCombs.toString(2);
+                pendingAllPassesUpdate = newAllPasses.toString(2);
+                hasPendingUIUpdate = true;
+            }
         }
     }
 
@@ -350,6 +395,14 @@ void Processor::valueTreePropertyChanged (ValueTree& tree, const Identifier& pro
         enabled.parseString (value.toString(), 2);
         ScopedLock sl (getCallbackLock());
         verb.swapEnabledAllPasses (enabled);
+    }
+}
+
+void Processor::processPendingUIUpdates() {
+    if (hasPendingUIUpdate.get()) {
+        state.setProperty(Tags::enabledCombs, pendingCombsUpdate, nullptr);
+        state.setProperty(Tags::enabledAllPasses, pendingAllPassesUpdate, nullptr);
+        hasPendingUIUpdate = false;
     }
 }
 } // namespace syncroboverb
