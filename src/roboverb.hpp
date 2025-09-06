@@ -21,7 +21,81 @@ static const Identifier width = "width";
 static const Identifier freezeMode = "freezeMode";
 static const Identifier enabledCombs = "enabledCombs";
 static const Identifier enabledAllPasses = "enabledAllPasses";
+static const Identifier randomEnabled = "randomEnabled";
+static const Identifier randomRate = "randomRate";
+static const Identifier randomAmount = "randomAmount";
+static const Identifier randomFilters = "randomFilters";
 }; // namespace Tags
+
+class TempoSyncedRandomizer {
+public:
+    enum RandomRate {
+        SixteenthNote = 0,
+        EighthNote,
+        QuarterNote,
+        HalfNote,
+        WholeNote,
+        TwoBars,
+        FourBars,
+        EightBars,
+        numRates
+    };
+    
+    enum FilterType {
+        CombsOnly = 0,
+        AllPassOnly,
+        Both,
+        numFilterTypes
+    };
+    
+    TempoSyncedRandomizer() : rng(juce::Random::getSystemRandom().nextInt64()) {
+        reset();
+    }
+    
+    void reset() {
+        lastPpqPosition = 0.0;
+        enabled = false;
+        rate = QuarterNote;
+        amount = 0.5f;
+        filterType = Both;
+    }
+    
+    void setEnabled(bool shouldBeEnabled) { enabled = shouldBeEnabled; }
+    void setRate(RandomRate newRate) { rate = newRate; }
+    void setAmount(float newAmount) { amount = juce::jlimit(0.0f, 1.0f, newAmount); }
+    void setFilterType(FilterType newType) { filterType = newType; }
+    
+    bool isEnabled() const { return enabled; }
+    RandomRate getRate() const { return rate; }
+    float getAmount() const { return amount; }
+    FilterType getFilterType() const { return filterType; }
+    
+    void processTempo(double bpm, double ppqPosition, class Roboverb& verb);
+    
+private:
+    bool enabled;
+    RandomRate rate;
+    float amount;
+    FilterType filterType;
+    double lastPpqPosition;
+    juce::Random rng;
+    
+    double getRateInQuarterNotes() const {
+        switch (rate) {
+            case SixteenthNote: return 0.25;
+            case EighthNote: return 0.5;
+            case QuarterNote: return 1.0;
+            case HalfNote: return 2.0;
+            case WholeNote: return 4.0;
+            case TwoBars: return 8.0;
+            case FourBars: return 16.0;
+            case EightBars: return 32.0;
+            default: return 1.0;
+        }
+    }
+    
+    void randomizeSwitches(class Roboverb& verb);
+};
 
 class Roboverb {
 public:
@@ -32,6 +106,10 @@ public:
         DryLevel,
         Width,
         FreezeMode,
+        RandomEnabled,
+        RandomRate,
+        RandomAmount,
+        RandomFilters,
         numParameters,
         numCombs = 8,
         numAllPasses = 4,
@@ -62,7 +140,11 @@ public:
               wetLevel (0.33f),
               dryLevel (0.4f),
               width (1.0f),
-              freezeMode (0) {}
+              freezeMode (0),
+              randomEnabled (0.0f),
+              randomRate (2.0f),
+              randomAmount (0.5f),
+              randomFilters (2.0f) {}
 
         float roomSize;   /**< Room size, 0 to 1.0, where 1.0 is big, 0 is small. */
         float damping;    /**< Damping, 0 to 1.0, where 0 is not damped, 1.0 is fully damped. */
@@ -71,6 +153,10 @@ public:
         float width;      /**< Reverb width, 0 to 1.0, where 1.0 is very wide. */
         float freezeMode; /**< Freeze mode - values < 0.5 are "normal" mode, values > 0.5
                              put the reverb into a continuous feedback loop. */
+        float randomEnabled; /**< Random switching enabled, 0 to 1.0 */
+        float randomRate;    /**< Random switching rate, 0 to numRates-1 */
+        float randomAmount;  /**< Random switching probability, 0 to 1.0 */
+        float randomFilters; /**< Which filters to randomize, 0 to numFilterTypes-1 */
 
         Parameters (const Parameters& o) { operator= (o); }
         Parameters& operator= (const Parameters& o) {
@@ -80,6 +166,10 @@ public:
             dryLevel = o.dryLevel;
             width = o.width;
             freezeMode = o.freezeMode;
+            randomEnabled = o.randomEnabled;
+            randomRate = o.randomRate;
+            randomAmount = o.randomAmount;
+            randomFilters = o.randomFilters;
             return *this;
         }
 
@@ -90,7 +180,11 @@ public:
                     juce::exactlyEqual (wetLevel , o.wetLevel) && 
                     juce::exactlyEqual (dryLevel , o.dryLevel) && 
                     juce::exactlyEqual (width , o.width) && 
-                    juce::exactlyEqual (freezeMode , o.freezeMode));
+                    juce::exactlyEqual (freezeMode , o.freezeMode) &&
+                    juce::exactlyEqual (randomEnabled , o.randomEnabled) &&
+                    juce::exactlyEqual (randomRate , o.randomRate) &&
+                    juce::exactlyEqual (randomAmount , o.randomAmount) &&
+                    juce::exactlyEqual (randomFilters , o.randomFilters));
             // clang-format on
         }
 
@@ -396,4 +490,9 @@ private:
     AllPassFilter allPass[numChannels][numAllPasses];
 
     LinearSmoothedValue damping, feedback, dryGain, wetGain1, wetGain2;
+    TempoSyncedRandomizer randomizer;
+
+public:
+    TempoSyncedRandomizer& getRandomizer() { return randomizer; }
+    const TempoSyncedRandomizer& getRandomizer() const { return randomizer; }
 };

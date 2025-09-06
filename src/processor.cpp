@@ -7,8 +7,8 @@
 namespace roboverb {
 
 Processor::Processor()
-    : numParameters (Roboverb::numParameters - 1 + 12),
-      numKnobs (Roboverb::numParameters - 1),
+    : numParameters (Roboverb::numParameters + 12),
+      numKnobs (Roboverb::numParameters),
       state ("roboverb") {
     updateState();
     state.addListener (this);
@@ -20,9 +20,8 @@ Processor::~Processor() {
 
 const String Processor::getName() const { return "Roboverb"; }
 int Processor::getNumParameters() {
-    // This version of roberb doesn't use FreezeMode. Thankfully
-    // this is the last parameter hence -1
-    // +12 is for the number of switches
+    // Roboverb::numParameters includes all reverb parameters + randomization parameters
+    // +12 is for the number of switches (8 combs + 4 allpasses)
     return numParameters;
 }
 
@@ -55,6 +54,18 @@ float Processor::getParameter (int index) {
                 break;
             case Roboverb::FreezeMode:
                 return p.freezeMode;
+                break;
+            case Roboverb::RandomEnabled:
+                return p.randomEnabled;
+                break;
+            case Roboverb::RandomRate:
+                return p.randomRate;
+                break;
+            case Roboverb::RandomAmount:
+                return p.randomAmount;
+                break;
+            case Roboverb::RandomFilters:
+                return p.randomFilters;
                 break;
         }
     }
@@ -92,6 +103,24 @@ void Processor::setParameter (int index, float newValue) {
             case Roboverb::FreezeMode:
                 params.freezeMode = newValue;
                 break;
+            case Roboverb::RandomEnabled:
+                params.randomEnabled = newValue;
+                verb.getRandomizer().setEnabled(newValue >= 0.5f);
+                break;
+            case Roboverb::RandomRate:
+                params.randomRate = newValue;
+                verb.getRandomizer().setRate(static_cast<TempoSyncedRandomizer::RandomRate>(
+                    juce::jlimit(0, TempoSyncedRandomizer::numRates - 1, (int)newValue)));
+                break;
+            case Roboverb::RandomAmount:
+                params.randomAmount = newValue;
+                verb.getRandomizer().setAmount(newValue);
+                break;
+            case Roboverb::RandomFilters:
+                params.randomFilters = newValue;
+                verb.getRandomizer().setFilterType(static_cast<TempoSyncedRandomizer::FilterType>(
+                    juce::jlimit(0, TempoSyncedRandomizer::numFilterTypes - 1, (int)newValue)));
+                break;
         }
 
         ScopedLock lock (getCallbackLock());
@@ -128,6 +157,18 @@ String Processor::getParameterName (int index, int) {
             break;
         case Roboverb::FreezeMode:
             return "Freeze mode";
+            break;
+        case Roboverb::RandomEnabled:
+            return "Random enabled";
+            break;
+        case Roboverb::RandomRate:
+            return "Random rate";
+            break;
+        case Roboverb::RandomAmount:
+            return "Random amount";
+            break;
+        case Roboverb::RandomFilters:
+            return "Random filters";
             break;
     }
 
@@ -206,6 +247,15 @@ void Processor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&) {
     for (int i = getTotalNumInputChannels(); i < getTotalNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+    // Handle tempo-synced randomization
+    if (auto* playHead = getPlayHead()) {
+        if (auto positionInfo = playHead->getPosition()) {
+            double bpm = positionInfo->getBpm().orFallback(150.0);
+            double ppqPosition = positionInfo->getPpqPosition().orFallback(0.0);
+            verb.getRandomizer().processTempo(bpm, ppqPosition, verb);
+        }
+    }
+
     if (buffer.getNumChannels() >= 2) {
         verb.processStereo (buffer.getWritePointer (0),
                             buffer.getWritePointer (1),
@@ -258,6 +308,10 @@ void Processor::updateState() {
     state.setProperty (Tags::dryLevel, params.dryLevel, nullptr);
     state.setProperty (Tags::width, params.width, nullptr);
     state.setProperty (Tags::freezeMode, params.freezeMode, nullptr);
+    state.setProperty (Tags::randomEnabled, params.randomEnabled, nullptr);
+    state.setProperty (Tags::randomRate, params.randomRate, nullptr);
+    state.setProperty (Tags::randomAmount, params.randomAmount, nullptr);
+    state.setProperty (Tags::randomFilters, params.randomFilters, nullptr);
     state.setProperty (Tags::enabledAllPasses, allpasses.toString (2), nullptr);
     state.setProperty (Tags::enabledCombs, combs.toString (2), nullptr);
     state.addListener (this);
@@ -278,6 +332,14 @@ void Processor::valueTreePropertyChanged (ValueTree& tree, const Identifier& pro
         setParameter (Roboverb::FreezeMode, (float) value);
     } else if (property == Tags::width) {
         setParameter (Roboverb::Width, (float) value);
+    } else if (property == Tags::randomEnabled) {
+        setParameter (Roboverb::RandomEnabled, (float) value);
+    } else if (property == Tags::randomRate) {
+        setParameter (Roboverb::RandomRate, (float) value);
+    } else if (property == Tags::randomAmount) {
+        setParameter (Roboverb::RandomAmount, (float) value);
+    } else if (property == Tags::randomFilters) {
+        setParameter (Roboverb::RandomFilters, (float) value);
     } else if (property == Tags::enabledCombs) {
         BigInteger enabled;
         enabled.parseString (value.toString(), 2);
