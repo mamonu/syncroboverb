@@ -4,12 +4,12 @@
 #include "editor.hpp"
 #include "processor.hpp"
 
-namespace roboverb {
+namespace syncroboverb {
 
 Processor::Processor()
-    : numParameters (Roboverb::numParameters + 12),
-      numKnobs (Roboverb::numParameters),
-      state ("roboverb") {
+    : numParameters (SyncRoboVerb::numParameters + 12),
+      numKnobs (SyncRoboVerb::numParameters),
+      state ("syncroboverb") {
     updateState();
     state.addListener (this);
 }
@@ -18,9 +18,9 @@ Processor::~Processor() {
     state.removeListener (this);
 }
 
-const String Processor::getName() const { return "Roboverb"; }
+const String Processor::getName() const { return "SyncRoboVerb"; }
 int Processor::getNumParameters() {
-    // Roboverb::numParameters includes all reverb parameters + randomization parameters
+    // SyncRoboVerb::numParameters includes all reverb parameters + randomization parameters
     // +12 is for the number of switches (8 combs + 4 allpasses)
     return numParameters;
 }
@@ -35,36 +35,36 @@ float Processor::getParameter (int index) {
             return verb.toggledAllPassFloat (filterIndex - 8);
         }
     } else {
-        const Roboverb::Parameters& p (verb.getParameters());
+        const SyncRoboVerb::Parameters& p (verb.getParameters());
         switch (index) {
-            case Roboverb::RoomSize:
+            case SyncRoboVerb::RoomSize:
                 return p.roomSize;
                 break;
-            case Roboverb::Damping:
+            case SyncRoboVerb::Damping:
                 return p.damping;
                 break;
-            case Roboverb::WetLevel:
+            case SyncRoboVerb::WetLevel:
                 return p.wetLevel;
                 break;
-            case Roboverb::DryLevel:
+            case SyncRoboVerb::DryLevel:
                 return p.dryLevel;
                 break;
-            case Roboverb::Width:
+            case SyncRoboVerb::Width:
                 return p.width;
                 break;
-            case Roboverb::FreezeMode:
+            case SyncRoboVerb::FreezeMode:
                 return p.freezeMode;
                 break;
-            case Roboverb::RandomEnabled:
+            case SyncRoboVerb::RandomEnabled:
                 return p.randomEnabled;
                 break;
-            case Roboverb::RandomRate:
+            case SyncRoboVerb::RandomRate:
                 return p.randomRate;
                 break;
-            case Roboverb::RandomAmount:
+            case SyncRoboVerb::RandomAmount:
                 return p.randomAmount;
                 break;
-            case Roboverb::RandomFilters:
+            case SyncRoboVerb::RandomFilters:
                 return p.randomFilters;
                 break;
         }
@@ -85,38 +85,38 @@ void Processor::setParameter (int index, float newValue) {
         }
     } else {
         switch (index) {
-            case Roboverb::RoomSize:
+            case SyncRoboVerb::RoomSize:
                 params.roomSize = newValue;
                 break;
-            case Roboverb::Damping:
+            case SyncRoboVerb::Damping:
                 params.damping = newValue;
                 break;
-            case Roboverb::WetLevel:
+            case SyncRoboVerb::WetLevel:
                 params.wetLevel = newValue;
                 break;
-            case Roboverb::DryLevel:
+            case SyncRoboVerb::DryLevel:
                 params.dryLevel = newValue;
                 break;
-            case Roboverb::Width:
+            case SyncRoboVerb::Width:
                 params.width = newValue;
                 break;
-            case Roboverb::FreezeMode:
+            case SyncRoboVerb::FreezeMode:
                 params.freezeMode = newValue;
                 break;
-            case Roboverb::RandomEnabled:
+            case SyncRoboVerb::RandomEnabled:
                 params.randomEnabled = newValue;
                 verb.getRandomizer().setEnabled(newValue >= 0.5f);
                 break;
-            case Roboverb::RandomRate:
+            case SyncRoboVerb::RandomRate:
                 params.randomRate = newValue;
                 verb.getRandomizer().setRate(static_cast<TempoSyncedRandomizer::RandomRate>(
                     juce::jlimit(0, TempoSyncedRandomizer::numRates - 1, (int)newValue)));
                 break;
-            case Roboverb::RandomAmount:
+            case SyncRoboVerb::RandomAmount:
                 params.randomAmount = newValue;
                 verb.getRandomizer().setAmount(newValue);
                 break;
-            case Roboverb::RandomFilters:
+            case SyncRoboVerb::RandomFilters:
                 params.randomFilters = newValue;
                 verb.getRandomizer().setFilterType(static_cast<TempoSyncedRandomizer::FilterType>(
                     juce::jlimit(0, TempoSyncedRandomizer::numFilterTypes - 1, (int)newValue)));
@@ -140,34 +140,34 @@ String Processor::getParameterName (int index, int) {
     }
 
     switch (index) {
-        case Roboverb::RoomSize:
+        case SyncRoboVerb::RoomSize:
             return "Room size";
             break;
-        case Roboverb::Damping:
+        case SyncRoboVerb::Damping:
             return "Damping";
             break;
-        case Roboverb::WetLevel:
+        case SyncRoboVerb::WetLevel:
             return "Wet level";
             break;
-        case Roboverb::DryLevel:
+        case SyncRoboVerb::DryLevel:
             return "Dry level";
             break;
-        case Roboverb::Width:
+        case SyncRoboVerb::Width:
             return "Width";
             break;
-        case Roboverb::FreezeMode:
+        case SyncRoboVerb::FreezeMode:
             return "Freeze mode";
             break;
-        case Roboverb::RandomEnabled:
+        case SyncRoboVerb::RandomEnabled:
             return "Random enabled";
             break;
-        case Roboverb::RandomRate:
+        case SyncRoboVerb::RandomRate:
             return "Random rate";
             break;
-        case Roboverb::RandomAmount:
+        case SyncRoboVerb::RandomAmount:
             return "Random amount";
             break;
-        case Roboverb::RandomFilters:
+        case SyncRoboVerb::RandomFilters:
             return "Random filters";
             break;
     }
@@ -181,22 +181,22 @@ String Processor::getParameterText (int index, int maxLen) {
     }
 
     switch (index) {
-        case Roboverb::RoomSize:
+        case SyncRoboVerb::RoomSize:
             return "Room size (text)";
             break;
-        case Roboverb::Damping:
+        case SyncRoboVerb::Damping:
             return "Damping (text)";
             break;
-        case Roboverb::WetLevel:
+        case SyncRoboVerb::WetLevel:
             return "Wet level (text)";
             break;
-        case Roboverb::DryLevel:
+        case SyncRoboVerb::DryLevel:
             return "Dry level (text)";
             break;
-        case Roboverb::Width:
+        case SyncRoboVerb::Width:
             return "Width (text)";
             break;
-        case Roboverb::FreezeMode:
+        case SyncRoboVerb::FreezeMode:
             return "Freeze mode (text)";
             break;
     }
@@ -321,25 +321,25 @@ void Processor::valueTreePropertyChanged (ValueTree& tree, const Identifier& pro
     const var& value (tree.getProperty (property));
 
     if (property == Tags::roomSize) {
-        setParameter (Roboverb::RoomSize, (float) value);
+        setParameter (SyncRoboVerb::RoomSize, (float) value);
     } else if (property == Tags::damping) {
-        setParameter (Roboverb::Damping, (float) value);
+        setParameter (SyncRoboVerb::Damping, (float) value);
     } else if (property == Tags::dryLevel) {
-        setParameter (Roboverb::DryLevel, (float) value);
+        setParameter (SyncRoboVerb::DryLevel, (float) value);
     } else if (property == Tags::wetLevel) {
-        setParameter (Roboverb::WetLevel, (float) value);
+        setParameter (SyncRoboVerb::WetLevel, (float) value);
     } else if (property == Tags::freezeMode) {
-        setParameter (Roboverb::FreezeMode, (float) value);
+        setParameter (SyncRoboVerb::FreezeMode, (float) value);
     } else if (property == Tags::width) {
-        setParameter (Roboverb::Width, (float) value);
+        setParameter (SyncRoboVerb::Width, (float) value);
     } else if (property == Tags::randomEnabled) {
-        setParameter (Roboverb::RandomEnabled, (float) value);
+        setParameter (SyncRoboVerb::RandomEnabled, (float) value);
     } else if (property == Tags::randomRate) {
-        setParameter (Roboverb::RandomRate, (float) value);
+        setParameter (SyncRoboVerb::RandomRate, (float) value);
     } else if (property == Tags::randomAmount) {
-        setParameter (Roboverb::RandomAmount, (float) value);
+        setParameter (SyncRoboVerb::RandomAmount, (float) value);
     } else if (property == Tags::randomFilters) {
-        setParameter (Roboverb::RandomFilters, (float) value);
+        setParameter (SyncRoboVerb::RandomFilters, (float) value);
     } else if (property == Tags::enabledCombs) {
         BigInteger enabled;
         enabled.parseString (value.toString(), 2);
@@ -352,45 +352,45 @@ void Processor::valueTreePropertyChanged (ValueTree& tree, const Identifier& pro
         verb.swapEnabledAllPasses (enabled);
     }
 }
-} // namespace roboverb
+} // namespace syncroboverb
 
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter() {
-    return new roboverb::Processor();
+    return new syncroboverb::Processor();
 }
 
 #if 0
     #include <juce_audio_processors/juce_audio_processors.h>
-    #include "roboverb.hpp"
+    #include "syncroboverb.hpp"
     #include "pluginview.hpp"
 
 using namespace juce;
 
-namespace roboverb {
+namespace syncroboverb {
 
 namespace detail {
 
-static float valueGet (int paramIndex, const Roboverb::Parameters& ps) {
+static float valueGet (int paramIndex, const SyncRoboVerb::Parameters& ps) {
     // clang-format off
     switch (paramIndex) {
-        case Roboverb::RoomSize: return ps.roomSize; break;
-        case Roboverb::Damping:  return ps.damping;  break;
-        case Roboverb::WetLevel: return ps.wetLevel; break;
-        case Roboverb::DryLevel: return ps.dryLevel; break;
-        case Roboverb::Width:    return ps.width;    break;
+        case SyncRoboVerb::RoomSize: return ps.roomSize; break;
+        case SyncRoboVerb::Damping:  return ps.damping;  break;
+        case SyncRoboVerb::WetLevel: return ps.wetLevel; break;
+        case SyncRoboVerb::DryLevel: return ps.dryLevel; break;
+        case SyncRoboVerb::Width:    return ps.width;    break;
     }
     // clang-format on
     return 0.0f;
 }
 
-static void valueAssign (int paramIndex, Roboverb::Parameters& ps, float value) {
+static void valueAssign (int paramIndex, SyncRoboVerb::Parameters& ps, float value) {
     // clang-format off
     switch (paramIndex) {
-        case Roboverb::RoomSize: ps.roomSize = value; break;
-        case Roboverb::Damping:  ps.damping  = value; break;
-        case Roboverb::WetLevel: ps.wetLevel = value; break;
-        case Roboverb::DryLevel: ps.dryLevel = value; break;
-        case Roboverb::Width:    ps.width    = value; break;
+        case SyncRoboVerb::RoomSize: ps.roomSize = value; break;
+        case SyncRoboVerb::Damping:  ps.damping  = value; break;
+        case SyncRoboVerb::WetLevel: ps.wetLevel = value; break;
+        case SyncRoboVerb::DryLevel: ps.dryLevel = value; break;
+        case SyncRoboVerb::Width:    ps.width    = value; break;
     }
     // clang-format on
 }
@@ -420,12 +420,12 @@ private:
 
 class Processor : public juce::AudioProcessor,
                   public juce::ValueTree::Listener {
-    Roboverb _verb;
-    juce::ValueTree _state { "Roboverb " };
+    SyncRoboVerb _verb;
+    juce::ValueTree _state { "SyncRoboVerb " };
 
 public:
     Processor() : juce::AudioProcessor() {
-        Roboverb::Parameters defaults;
+        SyncRoboVerb::Parameters defaults;
 
         // note: do not change the order of parameters.
         addParameter (new AudioParameterFloat ("roomSize", "Room Size", 0.0f, 1.0f, defaults.roomSize));
@@ -434,13 +434,13 @@ public:
         addParameter (new AudioParameterFloat ("dryLevel", "Dry Level", 0.0f, 1.0f, defaults.dryLevel));
         addParameter (new AudioParameterFloat ("width", "Width", 0.0f, 1.0f, defaults.width));
 
-        for (int i = 0; i < Roboverb::numCombs; ++i) {
+        for (int i = 0; i < SyncRoboVerb::numCombs; ++i) {
             new AudioParameterBool (String ("comb-") + String (i + 1),
                                     String ("Comb ") + String (i + 1),
                                     ! juce::exactlyEqual (0.0f, _verb.toggledCombFloat (i)));
         }
 
-        for (int i = 0; i < Roboverb::numAllPasses; ++i) {
+        for (int i = 0; i < SyncRoboVerb::numAllPasses; ++i) {
             new AudioParameterBool (String ("allpass-") + String (i + 1),
                                     String ("All Pass ") + String (i + 1),
                                     ! juce::exactlyEqual (0.0f, _verb.toggledAllPassFloat (i)));
@@ -457,7 +457,7 @@ public:
     void valueTreeParentChanged (ValueTree&) override {}
     void valueTreeRedirected (ValueTree&) override {}
     
-    Roboverb::Parameters safeParams() const noexcept {
+    SyncRoboVerb::Parameters safeParams() const noexcept {
         juce::ScopedLock sl (getCallbackLock());
         return _verb.getParameters();
     }
@@ -467,20 +467,20 @@ public:
         auto rparams = safeParams();
 
         bool changed = true;
-        auto idx = Roboverb::RoomSize;
+        auto idx = SyncRoboVerb::RoomSize;
         if (property == Tags::roomSize) {
-            idx = Roboverb::RoomSize;
+            idx = SyncRoboVerb::RoomSize;
     
         } else if (property == Tags::damping) {
-           idx = Roboverb::Damping
+           idx = SyncRoboVerb::Damping
         } else if (property == Tags::dryLevel) {
-            idx = Roboverb::DryLevel;
+            idx = SyncRoboVerb::DryLevel;
         } else if (property == Tags::wetLevel) {
-            idx = Roboverb::WetLevel;
+            idx = SyncRoboVerb::WetLevel;
         } else if (property == Tags::freezeMode) {
-            idx = Roboverb::FreezeMode;
+            idx = SyncRoboVerb::FreezeMode;
         } else if (property == Tags::width) {
-            idx = Roboverb::Width;
+            idx = SyncRoboVerb::Width;
         } else {
             changed = false;
         }
@@ -506,7 +506,7 @@ public:
     }
 
     void updateState() {
-        Roboverb::Parameters rparams;
+        SyncRoboVerb::Parameters rparams;
         _state.removeListener (this);
         BigInteger combs, allpasses;
         {
@@ -530,7 +530,7 @@ public:
     }
 
     //==============================================================================
-    const String getName() const override { return "Roboverb"; }
+    const String getName() const override { return "SyncRoboVerb"; }
     StringArray getAlternateDisplayNames() const override { return { "RBVB" }; }
 
     //==============================================================================
@@ -548,7 +548,7 @@ public:
         auto rparams (_verb.getParameters());
 
         int numParamChanges = 0;
-        for (int i = 0; i < Roboverb::numParameters; ++i) {
+        for (int i = 0; i < SyncRoboVerb::numParameters; ++i) {
             auto param = dynamic_cast<AudioParameterFloat*> (params.getUnchecked (i));
             auto val = param->get();
             if (juce::exactlyEqual (val, detail::valueGet (i, rparams)))
@@ -561,15 +561,15 @@ public:
         if (numParamChanges > 0)
             _verb.setParameters (rparams);
 
-        for (int i = 0; i < Roboverb::numCombs; ++i) {
+        for (int i = 0; i < SyncRoboVerb::numCombs; ++i) {
             auto isOn = dynamic_cast<AudioParameterBool*> (
-                params.getUnchecked (i + Roboverb::numParameters));
+                params.getUnchecked (i + SyncRoboVerb::numParameters));
             _verb.setCombToggle (i, *isOn);
         }
 
-        for (int i = 0; i < Roboverb::numAllPasses; ++i) {
+        for (int i = 0; i < SyncRoboVerb::numAllPasses; ++i) {
             auto isOn = dynamic_cast<AudioParameterBool*> (
-                params.getUnchecked (i + Roboverb::numParameters + Roboverb::numCombs));
+                params.getUnchecked (i + SyncRoboVerb::numParameters + SyncRoboVerb::numCombs));
             _verb.setAllPassToggle (i, *isOn);
         }
     }
@@ -808,11 +808,11 @@ protected:
     #endif
 };
 
-} // namespace roboverb
+} // namespace syncroboverb
 
 
 JUCE_PUBLIC_FUNCTION
 juce::AudioProcessor* createPluginFilter() {
-    return new roboverb::Processor();
+    return new syncroboverb::Processor();
 }
 #endif

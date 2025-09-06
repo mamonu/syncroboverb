@@ -1,12 +1,12 @@
-# Roboverb CMakeLists.txt
+# SyncRoboVerb CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.22)
-project(Roboverb VERSION 1.2.0)
+project(SyncRoboVerb VERSION 1.2.0)
 
 add_subdirectory(deps/JUCE)
 add_subdirectory(deps/clap-juce-extensions EXCLUDE_FROM_ALL)
 
-juce_add_plugin(Roboverb
+juce_add_plugin(SyncRoboVerb
     COMPANY_NAME Kushview                       # Specify the name of the plugin's author
     IS_SYNTH FALSE                              # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE                      # Does the plugin need midi input?
@@ -14,22 +14,22 @@ juce_add_plugin(Roboverb
     IS_MIDI_EFFECT FALSE                        # Is this plugin a MIDI effect?
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE           # Does the editor need keyboard focus?
     COPY_PLUGIN_AFTER_BUILD FALSE               # Should the plugin be installed to a default location after building?
-    LV2URI "https://kushview.net/plugins/roboverb"
+    LV2URI "https://kushview.net/plugins/syncroboverb"
     PLUGIN_MANUFACTURER_CODE KshV               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE Rbvb                            # A unique four-character plugin id with exactly one upper-case character
+    PLUGIN_CODE SRbv                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3 LV2 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    PRODUCT_NAME "Roboverb")                        # The name of the final executable, which can differ from the target name
-clap_juce_extensions_plugin(TARGET Roboverb
-    CLAP_ID "net.kushview.Roboverb"
+    PRODUCT_NAME "SyncRoboVerb")                        # The name of the final executable, which can differ from the target name
+clap_juce_extensions_plugin(TARGET SyncRoboVerb
+    CLAP_ID "net.kushview.SyncRoboVerb"
     CLAP_FEATURES reverb)
 
-target_include_directories(Roboverb PUBLIC
+target_include_directories(SyncRoboVerb PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
 
-target_sources(Roboverb
+target_sources(SyncRoboVerb
     PRIVATE
-        src/roboverb.cpp
+        src/syncroboverb.cpp
         src/processor.cpp
         src/res.cpp
         src/editor.cpp
@@ -37,16 +37,16 @@ target_sources(Roboverb
         src/pluginview.cpp)
 
 if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(Roboverb PUBLIC -Wno-unused-parameter -Wno-overloaded-virtual)
+    target_compile_options(SyncRoboVerb PUBLIC -Wno-unused-parameter -Wno-overloaded-virtual)
 endif()
 
-target_compile_definitions(Roboverb
+target_compile_definitions(SyncRoboVerb
     PUBLIC
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
-target_link_libraries(Roboverb
+target_link_libraries(SyncRoboVerb
     PRIVATE
         juce::juce_audio_utils
     PUBLIC

@@ -8,7 +8,7 @@
 #include "res.hpp"
 #include <juce_gui_basics/juce_gui_basics.h>
 
-namespace roboverb {
+namespace syncroboverb {
 
 class SphereScope;
 

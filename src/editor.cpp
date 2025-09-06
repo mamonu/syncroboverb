@@ -4,7 +4,7 @@
 
 #include "editor.hpp"
 
-namespace roboverb {
+namespace syncroboverb {
 
 Editor::Editor (Processor& p)
     : AudioProcessorEditor (&p), processor (p)

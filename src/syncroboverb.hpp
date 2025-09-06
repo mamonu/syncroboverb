@@ -70,7 +70,7 @@ public:
     float getAmount() const { return amount; }
     FilterType getFilterType() const { return filterType; }
     
-    void processTempo(double bpm, double ppqPosition, class Roboverb& verb);
+    void processTempo(double bpm, double ppqPosition, class SyncRoboVerb& verb);
     
 private:
     bool enabled;
@@ -94,10 +94,10 @@ private:
         }
     }
     
-    void randomizeSwitches(class Roboverb& verb);
+    void randomizeSwitches(class SyncRoboVerb& verb);
 };
 
-class Roboverb {
+class SyncRoboVerb {
 public:
     enum ParameterIndex {
         RoomSize = 0,
@@ -116,7 +116,7 @@ public:
         numChannels = 2
     };
 
-    Roboverb() {
+    SyncRoboVerb() {
         for (int i = 0; i < numCombs; ++i)
             enabledCombs[i] = false;
         enabledCombs[3] = true;

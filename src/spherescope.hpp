@@ -8,7 +8,7 @@
 #include "juce.hpp"
 #include "res.hpp"
 
-namespace roboverb {
+namespace syncroboverb {
 
 class SphereScope : public Component {
 public:

@@ -1,9 +1,9 @@
 // Copyright (C) 2015-2025  Kushview, LLC <info@kushview.net>
 // SPDX-License-Identifier: GPL3-or-later
 
-#include "roboverb.hpp"
+#include "syncroboverb.hpp"
 
-void TempoSyncedRandomizer::processTempo(double bpm, double ppqPosition, Roboverb& verb) {
+void TempoSyncedRandomizer::processTempo(double bpm, double ppqPosition, SyncRoboVerb& verb) {
     if (!enabled) return;
     
     double interval = getRateInQuarterNotes();
@@ -15,12 +15,12 @@ void TempoSyncedRandomizer::processTempo(double bpm, double ppqPosition, Robover
     }
 }
 
-void TempoSyncedRandomizer::randomizeSwitches(Roboverb& verb) {
+void TempoSyncedRandomizer::randomizeSwitches(SyncRoboVerb& verb) {
     if (amount <= 0.0f) return;
     
     switch (filterType) {
         case CombsOnly:
-            for (int i = 0; i < Roboverb::numCombs; ++i) {
+            for (int i = 0; i < SyncRoboVerb::numCombs; ++i) {
                 if (rng.nextFloat() < amount) {
                     bool currentState = verb.toggledCombFloat(i) > 0.5f;
                     verb.setCombToggle(i, !currentState);
@@ -29,7 +29,7 @@ void TempoSyncedRandomizer::randomizeSwitches(Roboverb& verb) {
             break;
             
         case AllPassOnly:
-            for (int i = 0; i < Roboverb::numAllPasses; ++i) {
+            for (int i = 0; i < SyncRoboVerb::numAllPasses; ++i) {
                 if (rng.nextFloat() < amount) {
                     bool currentState = verb.toggledAllPassFloat(i) > 0.5f;
                     verb.setAllPassToggle(i, !currentState);
@@ -40,14 +40,14 @@ void TempoSyncedRandomizer::randomizeSwitches(Roboverb& verb) {
         case Both:
         default:
             // Randomize comb filters
-            for (int i = 0; i < Roboverb::numCombs; ++i) {
+            for (int i = 0; i < SyncRoboVerb::numCombs; ++i) {
                 if (rng.nextFloat() < amount) {
                     bool currentState = verb.toggledCombFloat(i) > 0.5f;
                     verb.setCombToggle(i, !currentState);
                 }
             }
             // Randomize all-pass filters
-            for (int i = 0; i < Roboverb::numAllPasses; ++i) {
+            for (int i = 0; i < SyncRoboVerb::numAllPasses; ++i) {
                 if (rng.nextFloat() < amount) {
                     bool currentState = verb.toggledAllPassFloat(i) > 0.5f;
                     verb.setAllPassToggle(i, !currentState);

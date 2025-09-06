@@ -5,9 +5,9 @@
 
 #include "juce.hpp"
 #include <juce_audio_processors/juce_audio_processors.h>
-#include "roboverb.hpp"
+#include "syncroboverb.hpp"
 
-namespace roboverb {
+namespace syncroboverb {
 
 class Processor  : public AudioProcessor,
                    public ValueTree::Listener
@@ -53,7 +53,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    void updateParameters (Roboverb::Parameters& params);
+    void updateParameters (SyncRoboVerb::Parameters& params);
     ValueTree getState() const { return state; }
 
     float getRMS() const { return rmsValue.get(); }
@@ -62,8 +62,8 @@ private:
     const int numParameters;
     const int numKnobs;
     ValueTree state;
-    Roboverb::Parameters params;
-    Roboverb verb;
+    SyncRoboVerb::Parameters params;
+    SyncRoboVerb verb;
 
     Atomic<float> rmsValue;
 

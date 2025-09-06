@@ -1,12 +1,12 @@
 // Copyright (C) 2015-2025  Kushview, LLC <info@kushview.net>
 // SPDX-License-Identifier: GPL3-or-later
 
-#include "roboverb.hpp"
+#include "syncroboverb.hpp"
 #include "spherescope.hpp"
 #include "aboutbox.hpp"
 #include "pluginview.hpp"
 
-namespace roboverb {
+namespace syncroboverb {
 //==============================================================================
 PluginView::PluginView() {
     //[Constructor_pre] You can add your own custom stuff here..
@@ -186,7 +186,7 @@ PluginView::PluginView() {
     label->setBounds (221, 159, 136, 24);
 
     label3.reset (new Label ("new label",
-                             TRANS ("ROBOVERB")));
+                             TRANS ("SYNCROBOVERB")));
     addAndMakeVisible (label3.get());
     label3->setFont (Font (FontOptions (16.00f, Font::plain)).withTypefaceStyle ("Regular"));
     label3->setJustificationType (Justification::centredRight);
@@ -285,7 +285,7 @@ PluginView::PluginView() {
     //[Constructor] You can add your own custom stuff here..
     about.setPluginName (JucePlugin_Name);
     about.setPluginVersion (JucePlugin_VersionString);
-    about.setPluginUrl ("Kushview, LLC", "https://kushview.net/products/roboverb");
+    about.setPluginUrl ("Kushview, LLC", "https://kushview.net/products/syncroboverb");
     pluginState.addListener (this);
     //[/Constructor]
 }

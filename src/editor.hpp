@@ -4,7 +4,7 @@
 #include "juce.hpp"
 #include <juce_audio_processors/juce_audio_processors.h>
 
-namespace roboverb {
+namespace syncroboverb {
 
 class Processor;
 class PluginView;
