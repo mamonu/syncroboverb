@@ -15,7 +15,7 @@ AboutBox::AboutBox() {
     //[/Constructor_pre]
 
     pluginLabel.reset (new Label ("pluginLabel",
-                                  TRANS ("SyncRoboVerb")));
+                                  TRANS ("SYNC_ROBO_VERB")));
     addAndMakeVisible (pluginLabel.get());
     pluginLabel->setFont (Font (FontOptions (24.00f, Font::plain)).withTypefaceStyle ("Regular"));
     pluginLabel->setJustificationType (Justification::centred);
@@ -33,10 +33,10 @@ AboutBox::AboutBox() {
     versionLabel->setColour (TextEditor::textColourId, Colours::black);
     versionLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    linkButton.reset (new HyperlinkButton (TRANS ("kushview.net"), URL ("http://kushview.net")));
+    linkButton.reset (new HyperlinkButton (TRANS ("mamonulabs.github.io"), URL ("https://mamonulabs.github.io")));
     addAndMakeVisible (linkButton.get());
-    linkButton->setTooltip (TRANS ("http://kushview.net"));
-    linkButton->setButtonText (TRANS ("kushview.net"));
+    linkButton->setTooltip (TRANS ("https://mamonulabs.github.io"));
+    linkButton->setButtonText (TRANS ("mamonulabs.github.io"));
     linkButton->setColour (HyperlinkButton::textColourId, Colour (0xcc3677ba));
 
     //[UserPreSize]
@@ -131,9 +131,9 @@ BEGIN_JUCER_METADATA
          fontname="Default font" fontsize="1.5e1" kerning="0" bold="0"
          italic="0" justification="36"/>
   <HYPERLINKBUTTON name="linkButton" id="1f700d0405340eb4" memberName="linkButton"
-                   virtualName="" explicitFocusOrder="0" pos="-76C 9C 150 26" tooltip="http://kushview.net"
-                   textCol="cc3677ba" buttonText="kushview.net" connectedEdges="0"
-                   needsCallback="0" radioGroupId="0" url="http://kushview.net"/>
+                   virtualName="" explicitFocusOrder="0" pos="-76C 9C 150 26" tooltip="https://mamonulabs.github.io"
+                   textCol="cc3677ba" buttonText="mamonulabs.github.io" connectedEdges="0"
+                   needsCallback="0" radioGroupId="0" url="https://mamonulabs.github.io"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

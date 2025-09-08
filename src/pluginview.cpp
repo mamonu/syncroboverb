@@ -186,7 +186,7 @@ PluginView::PluginView() {
     label->setBounds (221, 159, 136, 24);
 
     label3.reset (new Label ("new label",
-                             TRANS ("SYNCROBOVERB")));
+                             TRANS ("SYNC_ROBO_VERB")));
     addAndMakeVisible (label3.get());
     label3->setFont (Font (FontOptions (16.00f, Font::plain)).withTypefaceStyle ("Regular"));
     label3->setJustificationType (Justification::centredRight);
@@ -366,7 +366,7 @@ PluginView::PluginView() {
     randomEnabledStateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
     randomEnabledStateLabel->setBounds (380, 110, 40, 16);
 
-    drawable1 = Drawable::createFromImageData (res::roboverb_bg_jpg, res::roboverb_bg_jpgSize);
+    drawable1 = Drawable::createFromImageData (res::syncroboverb_bg_jpg, res::syncroboverb_bg_jpgSize);
 
     //[UserPreSize]
     combButtons.add (comb1.get());
@@ -395,9 +395,9 @@ PluginView::PluginView() {
     setSize (720, 220);
 
     //[Constructor] You can add your own custom stuff here..
-    about.setPluginName ("SyncRoboVerb");
+    about.setPluginName ("SYNC_ROBO_VERB");
     about.setPluginVersion ("1.2.0");
-    about.setPluginUrl ("Kushview, LLC", "https://kushview.net/products/syncroboverb");
+    about.setPluginUrl ("mamonulabs", "https://mamonulabs.github.io");
     pluginState.addListener (this);
     //[/Constructor]
 }
@@ -473,20 +473,6 @@ void PluginView::paint (Graphics& g) {
             drawable1->drawWithin (g, Rectangle<float> (x, y, w, h), RectanglePlacement::stretchToFit, 1.000f);
     }
 
-    {
-        int x = 0, y = 0, w = proportionOfWidth (1.0000f), h = proportionOfHeight (1.0000f);
-        Colour fillColour1 = Colour (0xa35c0000), fillColour2 = Colour (0xaa401818);
-        //[UserPaintCustomArguments] Customize the painting arguments here..
-        //[/UserPaintCustomArguments]
-        g.setGradientFill (ColourGradient (fillColour1,
-                                           56.0f - 0.0f + x,
-                                           static_cast<float> (-56) - 0.0f + y,
-                                           fillColour2,
-                                           424.0f - 0.0f + x,
-                                           224.0f - 0.0f + y,
-                                           true));
-        g.fillRect (x, y, w, h);
-    }
 
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
