@@ -18,7 +18,7 @@ PluginView::PluginView() {
     addAndMakeVisible (sphere.get());
     sphere->setName ("sphere");
 
-    sphere->setBounds (130, 18, 96, 94);
+    sphere->setBounds (130, 18, 101, 99);  // Increased by 5% (96->101, 94->99)
 
     comb4.reset (new ToggleSwitch ("comb4"));
     addAndMakeVisible (comb4.get());
