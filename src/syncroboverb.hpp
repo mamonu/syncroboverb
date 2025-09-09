@@ -25,6 +25,7 @@ static const Identifier randomEnabled = "randomEnabled";
 static const Identifier randomRate = "randomRate";
 static const Identifier randomAmount = "randomAmount";
 static const Identifier randomFilters = "randomFilters";
+static const Identifier crossfadeRate = "crossfadeRate";
 }; // namespace Tags
 
 class TempoSyncedRandomizer {
@@ -118,6 +119,58 @@ private:
     void randomizeSwitches(class SyncRoboVerb& verb);
 };
 
+class TempoSyncedCrossfadeManager {
+public:
+    enum CrossfadeTiming {
+        Immediate = 0,      // ~1ms (emergency/click protection only)
+        Sixtyfourth,        // 1/64 note
+        Thirtysecond,       // 1/32 note  
+        Sixteenth,          // 1/16 note
+        Eighth,             // 1/8 note
+        Quarter,            // 1/4 note
+        numTimings
+    };
+    
+    TempoSyncedCrossfadeManager() : crossfadeTiming(Thirtysecond), currentBPM(150.0), sampleRate(44100.0) {}
+    
+    void updateTempo(double bpm, double sr) {
+        currentBPM = bpm;
+        sampleRate = sr;
+    }
+    
+    void setCrossfadeTiming(CrossfadeTiming timing) {
+        crossfadeTiming = timing;
+    }
+    
+    CrossfadeTiming getCrossfadeTiming() const { return crossfadeTiming; }
+    
+    int calculateFadeSamples() const {
+        if (crossfadeTiming == Immediate) {
+            return (int)(sampleRate * 0.001);  // 1ms click protection
+        }
+        
+        double beatsPerSample = currentBPM / (60.0 * sampleRate);
+        double fadeDurationBeats = getNoteDuration(crossfadeTiming);
+        return (int)(fadeDurationBeats / beatsPerSample);
+    }
+    
+private:
+    CrossfadeTiming crossfadeTiming;
+    double currentBPM;
+    double sampleRate;
+    
+    double getNoteDuration(CrossfadeTiming timing) const {
+        switch (timing) {
+            case Sixtyfourth: return 0.0625;   // 1/64 note
+            case Thirtysecond: return 0.125;   // 1/32 note  
+            case Sixteenth: return 0.25;       // 1/16 note
+            case Eighth: return 0.5;           // 1/8 note
+            case Quarter: return 1.0;          // 1/4 note
+            default: return 0.125;
+        }
+    }
+};
+
 class SyncRoboVerb {
 public:
     enum ParameterIndex {
@@ -131,6 +184,7 @@ public:
         RandomRate,
         RandomAmount,
         RandomFilters,
+        CrossfadeRate,
         numParameters,
         numCombs = 8,
         numAllPasses = 4,
@@ -165,7 +219,8 @@ public:
               randomEnabled (0.0f),
               randomRate (2.0f),
               randomAmount (0.5f),
-              randomFilters (2.0f) {}
+              randomFilters (2.0f),
+              crossfadeRate (2.0f) {}
 
         float roomSize;   /**< Room size, 0 to 1.0, where 1.0 is big, 0 is small. */
         float damping;    /**< Damping, 0 to 1.0, where 0 is not damped, 1.0 is fully damped. */
@@ -178,6 +233,7 @@ public:
         float randomRate;    /**< Random switching rate, 0 to numRates-1 */
         float randomAmount;  /**< Random switching probability, 0 to 1.0 */
         float randomFilters; /**< Which filters to randomize, 0 to numFilterTypes-1 */
+        float crossfadeRate; /**< Crossfade timing, 0 to numTimings-1 */
 
         Parameters (const Parameters& o) { operator= (o); }
         Parameters& operator= (const Parameters& o) {
@@ -191,6 +247,7 @@ public:
             randomRate = o.randomRate;
             randomAmount = o.randomAmount;
             randomFilters = o.randomFilters;
+            crossfadeRate = o.crossfadeRate;
             return *this;
         }
 
@@ -205,7 +262,8 @@ public:
                     juce::exactlyEqual (randomEnabled , o.randomEnabled) &&
                     juce::exactlyEqual (randomRate , o.randomRate) &&
                     juce::exactlyEqual (randomAmount , o.randomAmount) &&
-                    juce::exactlyEqual (randomFilters , o.randomFilters));
+                    juce::exactlyEqual (randomFilters , o.randomFilters) &&
+                    juce::exactlyEqual (crossfadeRate , o.crossfadeRate));
             // clang-format on
         }
 
@@ -392,7 +450,9 @@ private:
 
     class CombFilter {
     public:
-        CombFilter() noexcept : bufferSize (0), bufferIndex (0), last (0) {}
+        CombFilter() noexcept : bufferSize (0), bufferIndex (0), last (0), 
+                               targetGain(1.0f), currentGain(0.0f), 
+                               fadeSamplesRemaining(0), totalFadeSamples(0) {}
 
         void setSize (const int size) {
             if ((size_t) size != bufferSize) {
@@ -408,8 +468,23 @@ private:
             last = 0;
             memset (buffer.get(), 0, sizeof (float) * (size_t) bufferSize);
         }
+        
+        void startFade(bool enabled, int fadeDurationSamples) noexcept {
+            targetGain = enabled ? 1.0f : 0.0f;
+            totalFadeSamples = fadeDurationSamples;
+            fadeSamplesRemaining = fadeDurationSamples;
+        }
 
         float process (const float input, const float damp, const float feedbackLevel) noexcept {
+            // Update crossfade if active
+            if (fadeSamplesRemaining > 0) {
+                float progress = 1.0f - (float(fadeSamplesRemaining) / totalFadeSamples);
+                currentGain = currentGain + (targetGain - currentGain) * progress;
+                fadeSamplesRemaining--;
+            } else {
+                currentGain = targetGain;
+            }
+            
             const float output = buffer[bufferIndex];
             last = (output * (1.0f - damp)) + (last * damp);
             JUCE_UNDENORMALISE (last);
@@ -418,7 +493,7 @@ private:
             JUCE_UNDENORMALISE (temp);
             buffer[bufferIndex] = temp;
             bufferIndex = (bufferIndex + 1) % bufferSize;
-            return output;
+            return output * currentGain;
         }
 
     private:
@@ -426,12 +501,20 @@ private:
         std::size_t bufferSize { 0 };
         std::size_t bufferIndex { 0 };
         float last;
+        
+        // Crossfade support
+        float targetGain;
+        float currentGain;
+        int fadeSamplesRemaining;
+        int totalFadeSamples;
     };
 
     //==============================================================================
     class AllPassFilter {
     public:
-        AllPassFilter() noexcept : bufferSize (0), bufferIndex (0) {}
+        AllPassFilter() noexcept : bufferSize (0), bufferIndex (0), 
+                                  targetGain(1.0f), currentGain(0.0f), 
+                                  fadeSamplesRemaining(0), totalFadeSamples(0) {}
 
         void setSize (const int size) {
             if ((size_t) size != bufferSize) {
@@ -446,19 +529,41 @@ private:
         void clear() noexcept {
             memset (buffer.get(), 0, sizeof (float) * (size_t) bufferSize);
         }
+        
+        void startFade(bool enabled, int fadeDurationSamples) noexcept {
+            targetGain = enabled ? 1.0f : 0.0f;
+            totalFadeSamples = fadeDurationSamples;
+            fadeSamplesRemaining = fadeDurationSamples;
+        }
 
         float process (const float input) noexcept {
+            // Update crossfade if active
+            if (fadeSamplesRemaining > 0) {
+                float progress = 1.0f - (float(fadeSamplesRemaining) / totalFadeSamples);
+                currentGain = currentGain + (targetGain - currentGain) * progress;
+                fadeSamplesRemaining--;
+            } else {
+                currentGain = targetGain;
+            }
+            
             const float bufferedValue = buffer[bufferIndex];
             float temp = input + (bufferedValue * 0.5f);
             // JUCE_UNDENORMALISE (temp);
             buffer[bufferIndex] = temp;
             bufferIndex = (bufferIndex + 1) % bufferSize;
-            return bufferedValue - input;
+            float output = bufferedValue - input;
+            return output * currentGain;
         }
 
     private:
         std::unique_ptr<float[]> buffer;
         std::size_t bufferSize, bufferIndex;
+        
+        // Crossfade support
+        float targetGain;
+        float currentGain;
+        int fadeSamplesRemaining;
+        int totalFadeSamples;
     };
 
     class LinearSmoothedValue {
@@ -512,8 +617,34 @@ private:
 
     LinearSmoothedValue damping, feedback, dryGain, wetGain1, wetGain2;
     TempoSyncedRandomizer randomizer;
+    TempoSyncedCrossfadeManager crossfadeManager;
 
 public:
     TempoSyncedRandomizer& getRandomizer() { return randomizer; }
     const TempoSyncedRandomizer& getRandomizer() const { return randomizer; }
+    
+    TempoSyncedCrossfadeManager& getCrossfadeManager() { return crossfadeManager; }
+    const TempoSyncedCrossfadeManager& getCrossfadeManager() const { return crossfadeManager; }
+    
+    void updateAllFilters(bool newCombStates[], bool newAllPassStates[]) {
+        int fadeSamples = crossfadeManager.calculateFadeSamples();
+        
+        for (int i = 0; i < numCombs; ++i) {
+            if (enabledCombs[i] != newCombStates[i]) {
+                for (int ch = 0; ch < numChannels; ++ch) {
+                    comb[ch][i].startFade(newCombStates[i], fadeSamples);
+                }
+                enabledCombs[i] = newCombStates[i];
+            }
+        }
+        
+        for (int i = 0; i < numAllPasses; ++i) {
+            if (enabledAllPasses[i] != newAllPassStates[i]) {
+                for (int ch = 0; ch < numChannels; ++ch) {
+                    allPass[ch][i].startFade(newAllPassStates[i], fadeSamples);
+                }
+                enabledAllPasses[i] = newAllPassStates[i];
+            }
+        }
+    }
 };

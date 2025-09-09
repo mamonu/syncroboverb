@@ -193,6 +193,11 @@ private:
     std::unique_ptr<Label> randomFiltersValueLabel;
     std::unique_ptr<Label> randomEnabledStateLabel;
 
+    // Crossfade control
+    std::unique_ptr<SkinDial> crossfadeRate;
+    std::unique_ptr<Label> crossfadeRateLabel;
+    std::unique_ptr<Label> crossfadeRateValueLabel;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginView)
 };

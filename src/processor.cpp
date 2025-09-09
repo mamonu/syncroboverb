@@ -67,6 +67,9 @@ float Processor::getParameter (int index) {
             case SyncRoboVerb::RandomFilters:
                 return p.randomFilters;
                 break;
+            case SyncRoboVerb::CrossfadeRate:
+                return p.crossfadeRate;
+                break;
         }
     }
 
@@ -78,11 +81,28 @@ void Processor::setParameter (int index, float newValue) {
         ScopedLock lock (getCallbackLock());
         const bool isSet = (newValue < 0.5) ? false : true;
         const int filterIndex = index - numKnobs;
-        if (filterIndex < 8) {
-            verb.setCombToggle (filterIndex, isSet);
-        } else {
-            verb.setAllPassToggle (filterIndex - 8, isSet);
+        
+        // Use crossfading for smooth transitions
+        bool combStates[8];
+        bool allPassStates[4];
+        
+        // Get current states
+        for (int i = 0; i < 8; ++i) {
+            combStates[i] = (verb.toggledCombFloat(i) >= 0.5f);
         }
+        for (int i = 0; i < 4; ++i) {
+            allPassStates[i] = (verb.toggledAllPassFloat(i) >= 0.5f);
+        }
+        
+        // Update the specific switch
+        if (filterIndex < 8) {
+            combStates[filterIndex] = isSet;
+        } else {
+            allPassStates[filterIndex - 8] = isSet;
+        }
+        
+        // Apply changes with crossfading
+        verb.updateAllFilters(combStates, allPassStates);
     } else {
         switch (index) {
             case SyncRoboVerb::RoomSize:
@@ -120,6 +140,11 @@ void Processor::setParameter (int index, float newValue) {
                 params.randomFilters = newValue;
                 verb.getRandomizer().setFilterType(static_cast<TempoSyncedRandomizer::FilterType>(
                     juce::jlimit(0, TempoSyncedRandomizer::numFilterTypes - 1, (int)newValue)));
+                break;
+            case SyncRoboVerb::CrossfadeRate:
+                params.crossfadeRate = newValue;
+                verb.getCrossfadeManager().setCrossfadeTiming(static_cast<TempoSyncedCrossfadeManager::CrossfadeTiming>(
+                    juce::jlimit(0, TempoSyncedCrossfadeManager::numTimings - 1, (int)newValue)));
                 break;
         }
 
@@ -169,6 +194,9 @@ String Processor::getParameterName (int index, int) {
             break;
         case SyncRoboVerb::RandomFilters:
             return "Random filters";
+            break;
+        case SyncRoboVerb::CrossfadeRate:
+            return "Crossfade rate";
             break;
     }
 
@@ -232,6 +260,20 @@ String Processor::getParameterText (int index, int maxLen) {
             }
             break;
         }
+        case SyncRoboVerb::CrossfadeRate:
+        {
+            int crossfadeValue = (int)params.crossfadeRate;
+            switch (crossfadeValue) {
+                case 0: return "Instant";
+                case 1: return "1/64";
+                case 2: return "1/32";
+                case 3: return "1/16";
+                case 4: return "1/8";
+                case 5: return "1/4";
+                default: return "1/32";
+            }
+            break;
+        }
     }
 
     return String();
@@ -280,11 +322,16 @@ void Processor::processBlock (AudioBuffer<float>& buffer, MidiBuffer&) {
     for (int i = getTotalNumInputChannels(); i < getTotalNumOutputChannels(); ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // Handle tempo-synced randomization
+    // Handle tempo-synced randomization and crossfading
     if (auto* playHead = getPlayHead()) {
         if (auto positionInfo = playHead->getPosition()) {
             double bpm = positionInfo->getBpm().orFallback(150.0);
             double ppqPosition = positionInfo->getPpqPosition().orFallback(0.0);
+            
+            // Update crossfade manager tempo
+            verb.getCrossfadeManager().updateTempo(bpm, getSampleRate());
+            
+            // Process randomization
             verb.getRandomizer().processTempo(bpm, ppqPosition, verb);
             
             // Check if randomization has changed switches and update UI
@@ -357,6 +404,7 @@ void Processor::updateState() {
     state.setProperty (Tags::randomRate, params.randomRate, nullptr);
     state.setProperty (Tags::randomAmount, params.randomAmount, nullptr);
     state.setProperty (Tags::randomFilters, params.randomFilters, nullptr);
+    state.setProperty (Tags::crossfadeRate, params.crossfadeRate, nullptr);
     state.setProperty (Tags::enabledAllPasses, allpasses.toString (2), nullptr);
     state.setProperty (Tags::enabledCombs, combs.toString (2), nullptr);
     state.addListener (this);
@@ -385,6 +433,8 @@ void Processor::valueTreePropertyChanged (ValueTree& tree, const Identifier& pro
         setParameter (SyncRoboVerb::RandomAmount, (float) value);
     } else if (property == Tags::randomFilters) {
         setParameter (SyncRoboVerb::RandomFilters, (float) value);
+    } else if (property == Tags::crossfadeRate) {
+        setParameter (SyncRoboVerb::CrossfadeRate, (float) value);
     } else if (property == Tags::enabledCombs) {
         BigInteger enabled;
         enabled.parseString (value.toString(), 2);

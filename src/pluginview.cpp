@@ -356,6 +356,36 @@ PluginView::PluginView() {
     randomFiltersValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
     randomFiltersValueLabel->setBounds (620, 120, 56, 16);
 
+    // Crossfade control
+    crossfadeRate.reset (new SkinDial ("crossfadeRate"));
+    addAndMakeVisible (crossfadeRate.get());
+    crossfadeRate->setRange (0, 5, 1);
+    crossfadeRate->setValue (2.0, dontSendNotification);  // Default to 1/32 note
+    crossfadeRate->setSliderStyle (Slider::RotaryVerticalDrag);
+    crossfadeRate->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
+    crossfadeRate->addListener (this);
+    crossfadeRate->setBounds (380, 146, 56, 56);
+
+    crossfadeRateLabel.reset (new Label ("crossfadeRateLabel", TRANS ("Crossfade")));
+    addAndMakeVisible (crossfadeRateLabel.get());
+    crossfadeRateLabel->setFont (Font (FontOptions (12.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    crossfadeRateLabel->setJustificationType (Justification::centred);
+    crossfadeRateLabel->setEditable (false, false, false);
+    crossfadeRateLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    crossfadeRateLabel->setColour (TextEditor::textColourId, Colours::black);
+    crossfadeRateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    crossfadeRateLabel->setBounds (360, 204, 80, 24);
+
+    crossfadeRateValueLabel.reset (new Label ("crossfadeRateValueLabel", TRANS ("1/32")));
+    addAndMakeVisible (crossfadeRateValueLabel.get());
+    crossfadeRateValueLabel->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    crossfadeRateValueLabel->setJustificationType (Justification::centred);
+    crossfadeRateValueLabel->setEditable (false, false, false);
+    crossfadeRateValueLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    crossfadeRateValueLabel->setColour (TextEditor::textColourId, Colours::black);
+    crossfadeRateValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    crossfadeRateValueLabel->setBounds (380, 220, 56, 16);
+
     randomEnabledStateLabel.reset (new Label ("randomEnabledStateLabel", TRANS ("OFF")));
     addAndMakeVisible (randomEnabledStateLabel.get());
     randomEnabledStateLabel->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
@@ -451,6 +481,11 @@ PluginView::~PluginView() {
     randomAmountValueLabel = nullptr;
     randomFiltersValueLabel = nullptr;
     randomEnabledStateLabel = nullptr;
+    
+    // Crossfade controls
+    crossfadeRate = nullptr;
+    crossfadeRateLabel = nullptr;
+    crossfadeRateValueLabel = nullptr;
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
@@ -596,6 +631,11 @@ void PluginView::sliderValueChanged (Slider* sliderThatWasMoved) {
         pluginState.setProperty (Tags::randomFilters, (float)randomFilters->getValue(), nullptr);
         updateParameterValueDisplays ();
         //[/UserSliderCode_randomFilters]
+    } else if (sliderThatWasMoved == crossfadeRate.get()) {
+        //[UserSliderCode_crossfadeRate] -- add your slider handling code here..
+        pluginState.setProperty (Tags::crossfadeRate, (float)crossfadeRate->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_crossfadeRate]
     }
 
     //[UsersliderValueChanged_Post]
@@ -652,6 +692,10 @@ void PluginView::stabilizeComponents (ValueTree newPluginState) {
     randomFilters->getValueObject().referTo (
         pluginState.getPropertyAsValue (Tags::randomFilters, nullptr));
 
+    crossfadeRate->setValue (pluginState.getProperty (Tags::crossfadeRate), dontSendNotification);
+    crossfadeRate->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::crossfadeRate, nullptr));
+
     // Update parameter value displays
     updateParameterValueDisplays ();
 }
@@ -677,6 +721,8 @@ void PluginView::valueTreePropertyChanged (ValueTree& tree, const Identifier& pr
         randomAmount->setValue (value, dontSendNotification);
     } else if (property == Tags::randomFilters) {
         randomFilters->setValue (value, dontSendNotification);
+    } else if (property == Tags::crossfadeRate) {
+        crossfadeRate->setValue (value, dontSendNotification);
     }
 }
 
@@ -717,6 +763,20 @@ void PluginView::updateParameterValueDisplays () {
         default: filtersText = "BOTH"; break;
     }
     randomFiltersValueLabel->setText (filtersText, dontSendNotification);
+
+    // Update crossfade display
+    int crossfadeValue = (int)crossfadeRate->getValue();
+    String crossfadeText;
+    switch (crossfadeValue) {
+        case 0: crossfadeText = "INSTANT"; break;
+        case 1: crossfadeText = "1/64"; break;
+        case 2: crossfadeText = "1/32"; break;
+        case 3: crossfadeText = "1/16"; break;
+        case 4: crossfadeText = "1/8"; break;
+        case 5: crossfadeText = "1/4"; break;
+        default: crossfadeText = "1/32"; break;
+    }
+    crossfadeRateValueLabel->setText (crossfadeText, dontSendNotification);
 
     // Update enabled state display
     String stateText = randomEnabled->getToggleState() ? "ON" : "OFF";
