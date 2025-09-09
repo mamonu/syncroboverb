@@ -44,3 +44,20 @@ cmake -Bbuild -GNinja
 cd build
 ninja -j4
 ```
+
+## macOS Installation Note
+
+Since this isn't code-signed, macOS will quarantine it. After installing to the right folder, that is
+`/Library/Audio/Plug-Ins/VST3/` for VST3 and
+`/Library/Audio/Plug-Ins/Components/` for AU
+
+
+you'll need to run:
+
+```bash
+# For VST3
+sudo xattr -r -d com.apple.quarantine /Library/Audio/Plug-Ins/VST3/SyncRoboVerb.vst3
+
+# For AU
+sudo xattr -r -d com.apple.quarantine /Library/Audio/Plug-Ins/Components/SyncRoboVerb.component
+```
