@@ -5,6 +5,7 @@
 //[/Headers]
 
 #include "aboutbox.hpp"
+#include "buildinfo.h"
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]
@@ -24,7 +25,7 @@ AboutBox::AboutBox() {
     pluginLabel->setColour (TextEditor::textColourId, Colours::black);
     pluginLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    versionLabel.reset (new Label ("versionLabel", TRANS ("v1.0.2")));
+    versionLabel.reset (new Label ("versionLabel", ""));
     addAndMakeVisible (versionLabel.get());
     versionLabel->setFont (Font (FontOptions (15.00f, Font::plain)).withTypefaceStyle ("Regular"));
     versionLabel->setJustificationType (Justification::centred);

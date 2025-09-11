@@ -2,7 +2,7 @@
 
 ![Screenshot](data/screenshot.png)
 
-A weird, metallic reverb that randomly flips its internal switches in time with your music.
+A weird, metallic reverb that randomly flips its internal switches for a bit in time with your music.
 
 Built on top of [Kushview's Roboverb](https://github.com/kushview/roboverb), this thing takes the classic "robotic" sound of Schroeder reverbs and makes it dance. Instead of just sitting there being static, the filter switches now flip on and off rhythmically, creating evolving textures that sync to your DAW's tempo.
 

@@ -3,6 +3,24 @@
 cmake_minimum_required(VERSION 3.22)
 project(SyncRoboVerb VERSION 0.8.0)
 
+# Build numbering system
+if(EXISTS "${CMAKE_SOURCE_DIR}/build_number.txt")
+    file(READ "${CMAKE_SOURCE_DIR}/build_number.txt" BUILD_NUMBER)
+    string(STRIP "${BUILD_NUMBER}" BUILD_NUMBER)
+else()
+    set(BUILD_NUMBER "14")
+endif()
+
+math(EXPR BUILD_NUMBER "${BUILD_NUMBER} + 1")
+file(WRITE "${CMAKE_SOURCE_DIR}/build_number.txt" "${BUILD_NUMBER}")
+
+# Generate timestamp
+string(TIMESTAMP BUILD_TIMESTAMP "%Y%m%d_%H%M")
+
+# Configure build info
+configure_file("${CMAKE_SOURCE_DIR}/src/buildinfo.h.in" 
+               "${CMAKE_BINARY_DIR}/src/buildinfo.h" @ONLY)
+
 add_subdirectory(deps/JUCE)
 add_subdirectory(deps/clap-juce-extensions EXCLUDE_FROM_ALL)
 
@@ -25,7 +43,8 @@ clap_juce_extensions_plugin(TARGET SyncRoboVerb
     CLAP_FEATURES reverb)
 
 target_include_directories(SyncRoboVerb PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/src>)
 
 target_sources(SyncRoboVerb
     PRIVATE

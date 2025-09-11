@@ -1,0 +1,4 @@
+#pragma once
+#define BUILD_NUMBER "@BUILD_NUMBER@"
+#define BUILD_TIMESTAMP "@BUILD_TIMESTAMP@"
+#define BUILD_ID "Build #@BUILD_NUMBER@ (@BUILD_TIMESTAMP@)"

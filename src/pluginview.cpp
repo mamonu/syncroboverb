@@ -4,6 +4,7 @@
 #include "syncroboverb.hpp"
 #include "spherescope.hpp"
 #include "aboutbox.hpp"
+#include "buildinfo.h"
 #include "pluginview.hpp"
 
 namespace syncroboverb {
@@ -18,7 +19,7 @@ PluginView::PluginView() {
     addAndMakeVisible (sphere.get());
     sphere->setName ("sphere");
 
-    sphere->setBounds (130, 18, 101, 99);  // Increased by 5% (96->101, 94->99)
+    sphere->setBounds (115, 13, 122, 120);  // Moved 5px left and 5px up from (120, 18)
 
     comb4.reset (new ToggleSwitch ("comb4"));
     addAndMakeVisible (comb4.get());
@@ -426,7 +427,7 @@ PluginView::PluginView() {
 
     //[Constructor] You can add your own custom stuff here..
     about.setPluginName ("SYNC_ROBO_VERB");
-    about.setPluginVersion ("1.2.0");
+    about.setPluginVersion (String("v1.2.0 ") + String(BUILD_ID));
     about.setPluginUrl ("mamonulabs", "https://mamonulabs.github.io");
     pluginState.addListener (this);
     //[/Constructor]
