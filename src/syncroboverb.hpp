@@ -26,6 +26,10 @@ static const Identifier randomRate = "randomRate";
 static const Identifier randomAmount = "randomAmount";
 static const Identifier randomFilters = "randomFilters";
 static const Identifier crossfadeRate = "crossfadeRate";
+static const Identifier allPassGain1 = "allPassGain1";
+static const Identifier allPassGain2 = "allPassGain2";
+static const Identifier allPassGain3 = "allPassGain3";
+static const Identifier allPassGain4 = "allPassGain4";
 }; // namespace Tags
 
 class TempoSyncedRandomizer {
@@ -185,6 +189,10 @@ public:
         RandomAmount,
         RandomFilters,
         CrossfadeRate,
+        AllPassGain1,
+        AllPassGain2,
+        AllPassGain3,
+        AllPassGain4,
         numParameters,
         numCombs = 8,
         numAllPasses = 4,
@@ -202,6 +210,10 @@ public:
             enabledAllPasses[i] = false;
         enabledAllPasses[0] = true;
         enabledAllPasses[1] = true;
+        
+        // Initialize AllPass gains (default to full gain = current behavior)
+        for (int i = 0; i < numAllPasses; ++i)
+            allPassGains[i] = 1.0f;
 
         setParameters (Parameters());
         setSampleRate (44100.0);
@@ -219,8 +231,12 @@ public:
               randomEnabled (0.0f),
               randomRate (2.0f),
               randomAmount (0.5f),
-              randomFilters (2.0f),
-              crossfadeRate (2.0f) {}
+              randomFilters (0.0f),  // CombsOnly
+              crossfadeRate (2.0f),
+              allPassGain1 (1.0f),
+              allPassGain2 (1.0f),
+              allPassGain3 (1.0f),
+              allPassGain4 (1.0f) {}
 
         float roomSize;   /**< Room size, 0 to 1.0, where 1.0 is big, 0 is small. */
         float damping;    /**< Damping, 0 to 1.0, where 0 is not damped, 1.0 is fully damped. */
@@ -234,6 +250,10 @@ public:
         float randomAmount;  /**< Random switching probability, 0 to 1.0 */
         float randomFilters; /**< Which filters to randomize, 0 to numFilterTypes-1 */
         float crossfadeRate; /**< Crossfade timing, 0 to numTimings-1 */
+        float allPassGain1;  /**< AllPass filter 1 gain, 0 to 1.0 */
+        float allPassGain2;  /**< AllPass filter 2 gain, 0 to 1.0 */
+        float allPassGain3;  /**< AllPass filter 3 gain, 0 to 1.0 */
+        float allPassGain4;  /**< AllPass filter 4 gain, 0 to 1.0 */
 
         Parameters (const Parameters& o) { operator= (o); }
         Parameters& operator= (const Parameters& o) {
@@ -248,6 +268,10 @@ public:
             randomAmount = o.randomAmount;
             randomFilters = o.randomFilters;
             crossfadeRate = o.crossfadeRate;
+            allPassGain1 = o.allPassGain1;
+            allPassGain2 = o.allPassGain2;
+            allPassGain3 = o.allPassGain3;
+            allPassGain4 = o.allPassGain4;
             return *this;
         }
 
@@ -263,7 +287,11 @@ public:
                     juce::exactlyEqual (randomRate , o.randomRate) &&
                     juce::exactlyEqual (randomAmount , o.randomAmount) &&
                     juce::exactlyEqual (randomFilters , o.randomFilters) &&
-                    juce::exactlyEqual (crossfadeRate , o.crossfadeRate));
+                    juce::exactlyEqual (crossfadeRate , o.crossfadeRate) &&
+                    juce::exactlyEqual (allPassGain1 , o.allPassGain1) &&
+                    juce::exactlyEqual (allPassGain2 , o.allPassGain2) &&
+                    juce::exactlyEqual (allPassGain3 , o.allPassGain3) &&
+                    juce::exactlyEqual (allPassGain4 , o.allPassGain4));
             // clang-format on
         }
 
@@ -304,6 +332,16 @@ public:
     float toggledAllPassFloat (const int index) const {
         return enabledAllPasses[index] ? 1.0f : 0.0f;
     }
+    
+    void setAllPassGain (const int index, const float gain) {
+        jassert (index >= 0 && index < numAllPasses);
+        allPassGains[index] = juce::jlimit (0.0f, 1.0f, gain);
+    }
+    
+    float getAllPassGain (const int index) const {
+        jassert (index >= 0 && index < numAllPasses);
+        return allPassGains[index];
+    }
 
     void setParameters (const Parameters& newParams) {
         const float wetScaleFactor = 6.0f;
@@ -315,6 +353,13 @@ public:
         wetGain2.setValue (0.5f * wet * (1.0f - newParams.width));
 
         gain = isFrozen (newParams.freezeMode) ? 0.0f : 0.015f;
+        
+        // Update AllPass gains from parameters
+        allPassGains[0] = newParams.allPassGain1;
+        allPassGains[1] = newParams.allPassGain2;
+        allPassGains[2] = newParams.allPassGain3;
+        allPassGains[3] = newParams.allPassGain4;
+        
         parameters = newParams;
         updateDamping();
     }
@@ -377,10 +422,14 @@ public:
 
             for (int j = 0; j < numAllPasses; ++j)  // run the allpass filters in series
             {
-                if ( ! enabledAllPasses [j])
-                    continue;
-                outL = allPass[0][j].process (outL);
-                outR = allPass[1][j].process (outR);
+                if (allPassGains[j] > 0.0f) {
+                    float processedL = allPass[0][j].process (outL);
+                    float processedR = allPass[1][j].process (outR);
+                    
+                    // Mix processed and dry signal based on gain
+                    outL = outL * (1.0f - allPassGains[j]) + processedL * allPassGains[j];
+                    outR = outR * (1.0f - allPassGains[j]) + processedR * allPassGains[j];
+                }
             }
 
             const float dry  = dryGain.getNextValue();
@@ -415,10 +464,13 @@ public:
 
             for (int j = 0; j < numAllPasses; ++j)
             {
-                // run the allpass filters in series
-                if ( ! enabledAllPasses [j])
-                    continue;
-                output = allPass[0][j].process (output);
+                // run the allpass filters in series with gain control
+                if (allPassGains[j] > 0.0f) {
+                    float processed = allPass[0][j].process (output);
+                    
+                    // Mix processed and dry signal based on gain
+                    output = output * (1.0f - allPassGains[j]) + processed * allPassGains[j];
+                }
             }
 
             const float dry  = dryGain.getNextValue();
@@ -607,7 +659,8 @@ private:
     //==============================================================================
 
     bool enabledCombs[numCombs];
-    bool enabledAllPasses[numAllPasses];
+    bool enabledAllPasses[numAllPasses];  // Keep for backwards compatibility
+    float allPassGains[numAllPasses];     // New gain control (0.0 to 1.0)
 
     Parameters parameters;
     float gain;

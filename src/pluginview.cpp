@@ -46,7 +46,7 @@ PluginView::PluginView() {
     roomSizeLabel->setColour (TextEditor::textColourId, Colours::black);
     roomSizeLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    roomSizeLabel->setBounds (13, 159, 56, 24);
+    roomSizeLabel->setBounds (13, 204, 56, 24);
 
     dampingLabel.reset (new Label ("dampingLabel",
                                    TRANS ("Damping")));
@@ -58,7 +58,7 @@ PluginView::PluginView() {
     dampingLabel->setColour (TextEditor::textColourId, Colours::black);
     dampingLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    dampingLabel->setBounds (72, 159, 56, 24);
+    dampingLabel->setBounds (72, 204, 56, 24);
 
     wetLabel.reset (new Label ("wetLabel",
                                TRANS ("Wet")));
@@ -70,7 +70,7 @@ PluginView::PluginView() {
     wetLabel->setColour (TextEditor::textColourId, Colours::black);
     wetLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    wetLabel->setBounds (14, 94, 56, 24);
+    wetLabel->setBounds (14, 129, 56, 24);
 
     dryLabel.reset (new Label ("dryLabel",
                                TRANS ("Dry")));
@@ -82,7 +82,7 @@ PluginView::PluginView() {
     dryLabel->setColour (TextEditor::textColourId, Colours::black);
     dryLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    dryLabel->setBounds (64, 94, 72, 24);
+    dryLabel->setBounds (64, 129, 72, 24);
 
     widthLabel.reset (new Label ("widthLabel",
                                  TRANS ("Width")));
@@ -95,7 +95,7 @@ PluginView::PluginView() {
     widthLabel->setColour (TextEditor::textColourId, Colours::black);
     widthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    widthLabel->setBounds (131, 159, 56, 24);
+    widthLabel->setBounds (131, 204, 56, 24);
 
     comb1.reset (new ToggleSwitch ("comb1"));
     addAndMakeVisible (comb1.get());
@@ -146,33 +146,53 @@ PluginView::PluginView() {
 
     comb8->setBounds (318, 87, 40, 40);
 
-    allpass1.reset (new ToggleSwitch ("allpass1"));
+    allpass1.reset (new SkinDial ("allpass1"));
     addAndMakeVisible (allpass1.get());
-    allpass1->setButtonText (String());
+    allpass1->setSliderStyle (Slider::RotaryVerticalDrag);
+    allpass1->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    allpass1->setRange (0, 1, 0.01);
+    allpass1->setValue (1.0, dontSendNotification);
     allpass1->addListener (this);
+    allpass1->setScale (2);  // Normal scale for visibility
+    allpass1->setImage (ImageCache::getFromMemory (res::red_knob_png, res::red_knob_pngSize));
 
-    allpass1->setBounds (219, 124, 40, 40);
+    allpass1->setBounds (460, 146, 56, 56);
 
-    allpass2.reset (new ToggleSwitch ("allpass2"));
+    allpass2.reset (new SkinDial ("allpass2"));
     addAndMakeVisible (allpass2.get());
-    allpass2->setButtonText (String());
+    allpass2->setSliderStyle (Slider::RotaryVerticalDrag);
+    allpass2->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    allpass2->setRange (0, 1, 0.01);
+    allpass2->setValue (1.0, dontSendNotification);
     allpass2->addListener (this);
+    allpass2->setScale (2);  // Normal scale for visibility
+    allpass2->setImage (ImageCache::getFromMemory (res::red_knob_png, res::red_knob_pngSize));
 
-    allpass2->setBounds (252, 124, 40, 40);
+    allpass2->setBounds (540, 146, 56, 56);
 
-    allpass3.reset (new ToggleSwitch ("allpass3"));
+    allpass3.reset (new SkinDial ("allpass3"));
     addAndMakeVisible (allpass3.get());
-    allpass3->setButtonText (String());
+    allpass3->setSliderStyle (Slider::RotaryVerticalDrag);
+    allpass3->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    allpass3->setRange (0, 1, 0.01);
+    allpass3->setValue (0.0, dontSendNotification);
     allpass3->addListener (this);
+    allpass3->setScale (2);  // Normal scale for visibility
+    allpass3->setImage (ImageCache::getFromMemory (res::red_knob_png, res::red_knob_pngSize));
 
-    allpass3->setBounds (285, 124, 40, 40);
+    allpass3->setBounds (620, 146, 56, 56);
 
-    allpass4.reset (new ToggleSwitch ("allpass4"));
+    allpass4.reset (new SkinDial ("allpass4"));
     addAndMakeVisible (allpass4.get());
-    allpass4->setButtonText (String());
+    allpass4->setSliderStyle (Slider::RotaryVerticalDrag);
+    allpass4->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    allpass4->setRange (0, 1, 0.01);
+    allpass4->setValue (0.0, dontSendNotification);
     allpass4->addListener (this);
+    allpass4->setScale (2);  // Normal scale for visibility
+    allpass4->setImage (ImageCache::getFromMemory (res::red_knob_png, res::red_knob_pngSize));
 
-    allpass4->setBounds (318, 124, 40, 40);
+    allpass4->setBounds (700, 146, 56, 56);
 
     label.reset (new Label ("new label",
                             TRANS ("Chambers\n")));
@@ -187,7 +207,7 @@ PluginView::PluginView() {
     label->setBounds (221, 159, 136, 24);
 
     label3.reset (new Label ("new label",
-                             TRANS ("SYNC_ROBO_VERB")));
+                             TRANS ("SYNC_ROBO_VERB AP")));
     addAndMakeVisible (label3.get());
     label3->setFont (Font (FontOptions (16.00f, Font::plain)).withTypefaceStyle ("Regular"));
     label3->setJustificationType (Justification::centredRight);
@@ -217,7 +237,7 @@ PluginView::PluginView() {
     wetLevel->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     wetLevel->addListener (this);
 
-    wetLevel->setBounds (14, 46, 56, 56);
+    wetLevel->setBounds (14, 81, 56, 56);
 
     dryLevel.reset (new SkinDial ("dryLevel"));
     addAndMakeVisible (dryLevel.get());
@@ -226,7 +246,7 @@ PluginView::PluginView() {
     dryLevel->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
     dryLevel->addListener (this);
 
-    dryLevel->setBounds (73, 46, 56, 56);
+    dryLevel->setBounds (73, 81, 56, 56);
 
     roomSize.reset (new SkinDial ("roomSize"));
     addAndMakeVisible (roomSize.get());
@@ -235,7 +255,7 @@ PluginView::PluginView() {
     roomSize->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     roomSize->addListener (this);
 
-    roomSize->setBounds (13, 111, 56, 56);
+    roomSize->setBounds (13, 146, 56, 56);
 
     damping.reset (new SkinDial ("damping"));
     addAndMakeVisible (damping.get());
@@ -244,7 +264,7 @@ PluginView::PluginView() {
     damping->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     damping->addListener (this);
 
-    damping->setBounds (72, 111, 56, 56);
+    damping->setBounds (72, 146, 56, 56);
 
     width.reset (new SkinDial ("width"));
     addAndMakeVisible (width.get());
@@ -253,7 +273,7 @@ PluginView::PluginView() {
     width->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     width->addListener (this);
 
-    width->setBounds (131, 111, 56, 56);
+    width->setBounds (131, 146, 56, 56);
 
     // Randomization controls
     randomEnabled.reset (new ToggleSwitch ("randomEnabled"));
@@ -308,24 +328,7 @@ PluginView::PluginView() {
     randomAmountLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
     randomAmountLabel->setBounds (540, 104, 56, 24);
 
-    randomFilters.reset (new SkinDial ("randomFilters"));
-    addAndMakeVisible (randomFilters.get());
-    randomFilters->setRange (0, 2, 1);
-    randomFilters->setValue (2.0, dontSendNotification);  // Default to BOTH
-    randomFilters->setSliderStyle (Slider::RotaryVerticalDrag);
-    randomFilters->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
-    randomFilters->addListener (this);
-    randomFilters->setBounds (620, 46, 56, 56);
 
-    randomFiltersLabel.reset (new Label ("randomFiltersLabel", TRANS ("Filters")));
-    addAndMakeVisible (randomFiltersLabel.get());
-    randomFiltersLabel->setFont (Font (FontOptions (12.00f, Font::plain)).withTypefaceStyle ("Regular"));
-    randomFiltersLabel->setJustificationType (Justification::centred);
-    randomFiltersLabel->setEditable (false, false, false);
-    randomFiltersLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
-    randomFiltersLabel->setColour (TextEditor::textColourId, Colours::black);
-    randomFiltersLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-    randomFiltersLabel->setBounds (620, 104, 56, 24);
 
     randomRateValueLabel.reset (new Label ("randomRateValueLabel", TRANS ("1/4")));
     addAndMakeVisible (randomRateValueLabel.get());
@@ -347,15 +350,6 @@ PluginView::PluginView() {
     randomAmountValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
     randomAmountValueLabel->setBounds (540, 120, 56, 16);
 
-    randomFiltersValueLabel.reset (new Label ("randomFiltersValueLabel", TRANS ("BOTH")));
-    addAndMakeVisible (randomFiltersValueLabel.get());
-    randomFiltersValueLabel->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
-    randomFiltersValueLabel->setJustificationType (Justification::centred);
-    randomFiltersValueLabel->setEditable (false, false, false);
-    randomFiltersValueLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
-    randomFiltersValueLabel->setColour (TextEditor::textColourId, Colours::black);
-    randomFiltersValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-    randomFiltersValueLabel->setBounds (620, 120, 56, 16);
 
     // Crossfade control
     crossfadeRate.reset (new SkinDial ("crossfadeRate"));
@@ -365,9 +359,9 @@ PluginView::PluginView() {
     crossfadeRate->setSliderStyle (Slider::RotaryVerticalDrag);
     crossfadeRate->setTextBoxStyle (Slider::NoTextBox, true, 80, 20);
     crossfadeRate->addListener (this);
-    crossfadeRate->setBounds (380, 146, 56, 56);
+    crossfadeRate->setBounds (620, 46, 56, 56);
 
-    crossfadeRateLabel.reset (new Label ("crossfadeRateLabel", TRANS ("Crossfade")));
+    crossfadeRateLabel.reset (new Label ("crossfadeRateLabel", TRANS ("Xfade")));
     addAndMakeVisible (crossfadeRateLabel.get());
     crossfadeRateLabel->setFont (Font (FontOptions (12.00f, Font::plain)).withTypefaceStyle ("Regular"));
     crossfadeRateLabel->setJustificationType (Justification::centred);
@@ -375,7 +369,7 @@ PluginView::PluginView() {
     crossfadeRateLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
     crossfadeRateLabel->setColour (TextEditor::textColourId, Colours::black);
     crossfadeRateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-    crossfadeRateLabel->setBounds (360, 204, 80, 24);
+    crossfadeRateLabel->setBounds (620, 104, 56, 24);
 
     crossfadeRateValueLabel.reset (new Label ("crossfadeRateValueLabel", TRANS ("1/32")));
     addAndMakeVisible (crossfadeRateValueLabel.get());
@@ -385,7 +379,7 @@ PluginView::PluginView() {
     crossfadeRateValueLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
     crossfadeRateValueLabel->setColour (TextEditor::textColourId, Colours::black);
     crossfadeRateValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-    crossfadeRateValueLabel->setBounds (380, 220, 56, 16);
+    crossfadeRateValueLabel->setBounds (620, 120, 56, 16);
 
     randomEnabledStateLabel.reset (new Label ("randomEnabledStateLabel", TRANS ("OFF")));
     addAndMakeVisible (randomEnabledStateLabel.get());
@@ -396,6 +390,47 @@ PluginView::PluginView() {
     randomEnabledStateLabel->setColour (TextEditor::textColourId, Colours::black);
     randomEnabledStateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
     randomEnabledStateLabel->setBounds (380, 110, 40, 16);
+
+    // AllPass knob labels
+    allpass1Label.reset (new Label ("allpass1Label", TRANS ("AP1")));
+    addAndMakeVisible (allpass1Label.get());
+    allpass1Label->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    allpass1Label->setJustificationType (Justification::centred);
+    allpass1Label->setEditable (false, false, false);
+    allpass1Label->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    allpass1Label->setColour (TextEditor::textColourId, Colours::black);
+    allpass1Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    allpass1Label->setBounds (460, 204, 56, 16);
+
+    allpass2Label.reset (new Label ("allpass2Label", TRANS ("AP2")));
+    addAndMakeVisible (allpass2Label.get());
+    allpass2Label->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    allpass2Label->setJustificationType (Justification::centred);
+    allpass2Label->setEditable (false, false, false);
+    allpass2Label->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    allpass2Label->setColour (TextEditor::textColourId, Colours::black);
+    allpass2Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    allpass2Label->setBounds (540, 204, 56, 16);
+
+    allpass3Label.reset (new Label ("allpass3Label", TRANS ("AP3")));
+    addAndMakeVisible (allpass3Label.get());
+    allpass3Label->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    allpass3Label->setJustificationType (Justification::centred);
+    allpass3Label->setEditable (false, false, false);
+    allpass3Label->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    allpass3Label->setColour (TextEditor::textColourId, Colours::black);
+    allpass3Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    allpass3Label->setBounds (620, 204, 56, 16);
+
+    allpass4Label.reset (new Label ("allpass4Label", TRANS ("AP4")));
+    addAndMakeVisible (allpass4Label.get());
+    allpass4Label->setFont (Font (FontOptions (10.00f, Font::plain)).withTypefaceStyle ("Regular"));
+    allpass4Label->setJustificationType (Justification::centred);
+    allpass4Label->setEditable (false, false, false);
+    allpass4Label->setColour (Label::textColourId, Colour (0xe4dfddaf));
+    allpass4Label->setColour (TextEditor::textColourId, Colours::black);
+    allpass4Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    allpass4Label->setBounds (700, 204, 56, 16);
 
     drawable1 = Drawable::createFromImageData (res::syncroboverb_bg_jpg, res::syncroboverb_bg_jpgSize);
 
@@ -408,25 +443,28 @@ PluginView::PluginView() {
     combButtons.add (comb6.get());
     combButtons.add (comb7.get());
     combButtons.add (comb8.get());
-    allPassButtons.add (allpass1.get());
-    allPassButtons.add (allpass2.get());
-    allPassButtons.add (allpass3.get());
-    allPassButtons.add (allpass4.get());
-
+    // Note: AllPass controls are now knobs (SkinDial), not buttons
+    
     frozen->setVisible (false);
 
     for (int i = 0; i < getNumChildComponents(); ++i) {
         if (SkinDial* sd = dynamic_cast<SkinDial*> (getChildComponent (i))) {
+            // Skip AllPass knobs - they're already configured individually above
+            if (sd == allpass1.get() || sd == allpass2.get() || 
+                sd == allpass3.get() || sd == allpass4.get()) {
+                continue;  // AllPass knobs already have scale=2 and image set
+            }
+            // Set normal scale for other knobs
             sd->setScale (2);
             sd->setImage (ImageCache::getFromMemory (res::red_knob_png, res::red_knob_pngSize));
         }
     }
     //[/UserPreSize]
 
-    setSize (720, 220);
+    setSize (780, 220);
 
     //[Constructor] You can add your own custom stuff here..
-    about.setPluginName ("SYNC_ROBO_VERB");
+    about.setPluginName ("SYNC_ROBO_VERB AP");
     about.setPluginVersion (String("v1.2.0 ") + String(BUILD_ID));
     about.setPluginUrl ("mamonulabs", "https://mamonulabs.github.io");
     pluginState.addListener (this);
@@ -473,20 +511,23 @@ PluginView::~PluginView() {
     randomEnabled = nullptr;
     randomRate = nullptr;
     randomAmount = nullptr;
-    randomFilters = nullptr;
     randomEnabledLabel = nullptr;
     randomRateLabel = nullptr;
     randomAmountLabel = nullptr;
-    randomFiltersLabel = nullptr;
     randomRateValueLabel = nullptr;
     randomAmountValueLabel = nullptr;
-    randomFiltersValueLabel = nullptr;
     randomEnabledStateLabel = nullptr;
     
     // Crossfade controls
     crossfadeRate = nullptr;
     crossfadeRateLabel = nullptr;
     crossfadeRateValueLabel = nullptr;
+    
+    // AllPass knob labels
+    allpass1Label = nullptr;
+    allpass2Label = nullptr;
+    allpass3Label = nullptr;
+    allpass4Label = nullptr;
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
@@ -505,8 +546,18 @@ void PluginView::paint (Graphics& g) {
         //[/UserPaintCustomArguments]
         g.setColour (Colours::black);
         jassert (drawable1 != nullptr);
-        if (drawable1 != nullptr)
+        // Load image directly from resource and crop left edge
+        Image bgImage = ImageCache::getFromMemory(res::syncroboverb_bg_jpg, res::syncroboverb_bg_jpgSize);
+        if (bgImage.isValid()) {
+            int cropLeft = 10; // Skip first 10 pixels from left
+            // Draw only the cropped portion of the image
+            g.drawImage(bgImage, 
+                       x, y, w, h,  // destination area (full plugin size)
+                       cropLeft, 0, bgImage.getWidth() - cropLeft, bgImage.getHeight()); // source area (cropped)
+        } else if (drawable1 != nullptr) {
+            // Fallback to original drawable method
             drawable1->drawWithin (g, Rectangle<float> (x, y, w, h), RectanglePlacement::stretchToFit, 1.000f);
+        }
     }
 
 
@@ -564,18 +615,6 @@ void PluginView::buttonClicked (Button* buttonThatWasClicked) {
     } else if (buttonThatWasClicked == comb8.get()) {
         //[UserButtonCode_comb8] -- add your button handler code here..
         //[/UserButtonCode_comb8]
-    } else if (buttonThatWasClicked == allpass1.get()) {
-        //[UserButtonCode_allpass1] -- add your button handler code here..
-        //[/UserButtonCode_allpass1]
-    } else if (buttonThatWasClicked == allpass2.get()) {
-        //[UserButtonCode_allpass2] -- add your button handler code here..
-        //[/UserButtonCode_allpass2]
-    } else if (buttonThatWasClicked == allpass3.get()) {
-        //[UserButtonCode_allpass3] -- add your button handler code here..
-        //[/UserButtonCode_allpass3]
-    } else if (buttonThatWasClicked == allpass4.get()) {
-        //[UserButtonCode_allpass4] -- add your button handler code here..
-        //[/UserButtonCode_allpass4]
     } else if (buttonThatWasClicked == helpButton.get()) {
         //[UserButtonCode_helpButton] -- add your button handler code here..
         if (! about.isVisible()) {
@@ -627,16 +666,31 @@ void PluginView::sliderValueChanged (Slider* sliderThatWasMoved) {
         pluginState.setProperty (Tags::randomAmount, (float)randomAmount->getValue(), nullptr);
         updateParameterValueDisplays ();
         //[/UserSliderCode_randomAmount]
-    } else if (sliderThatWasMoved == randomFilters.get()) {
-        //[UserSliderCode_randomFilters] -- add your slider handling code here..
-        pluginState.setProperty (Tags::randomFilters, (float)randomFilters->getValue(), nullptr);
-        updateParameterValueDisplays ();
-        //[/UserSliderCode_randomFilters]
     } else if (sliderThatWasMoved == crossfadeRate.get()) {
         //[UserSliderCode_crossfadeRate] -- add your slider handling code here..
         pluginState.setProperty (Tags::crossfadeRate, (float)crossfadeRate->getValue(), nullptr);
         updateParameterValueDisplays ();
         //[/UserSliderCode_crossfadeRate]
+    } else if (sliderThatWasMoved == allpass1.get()) {
+        //[UserSliderCode_allpass1] -- add your slider handling code here..
+        pluginState.setProperty (Tags::allPassGain1, (float)allpass1->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_allpass1]
+    } else if (sliderThatWasMoved == allpass2.get()) {
+        //[UserSliderCode_allpass2] -- add your slider handling code here..
+        pluginState.setProperty (Tags::allPassGain2, (float)allpass2->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_allpass2]
+    } else if (sliderThatWasMoved == allpass3.get()) {
+        //[UserSliderCode_allpass3] -- add your slider handling code here..
+        pluginState.setProperty (Tags::allPassGain3, (float)allpass3->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_allpass3]
+    } else if (sliderThatWasMoved == allpass4.get()) {
+        //[UserSliderCode_allpass4] -- add your slider handling code here..
+        pluginState.setProperty (Tags::allPassGain4, (float)allpass4->getValue(), nullptr);
+        updateParameterValueDisplays ();
+        //[/UserSliderCode_allpass4]
     }
 
     //[UsersliderValueChanged_Post]
@@ -673,8 +727,7 @@ void PluginView::stabilizeComponents (ValueTree newPluginState) {
 
     for (int i = 0; i < combButtons.size(); ++i)
         combButtons.getUnchecked (i)->setToggleState (combs[i], dontSendNotification);
-    for (int i = 0; i < allPassButtons.size(); ++i)
-        allPassButtons.getUnchecked (i)->setToggleState (allpasses[i], dontSendNotification);
+    // Note: AllPass controls are now gain knobs, not toggle buttons
 
     // Randomization controls
     randomEnabled->setToggleState ((float)pluginState.getProperty (Tags::randomEnabled) > 0.5f, dontSendNotification);
@@ -689,13 +742,27 @@ void PluginView::stabilizeComponents (ValueTree newPluginState) {
     randomAmount->getValueObject().referTo (
         pluginState.getPropertyAsValue (Tags::randomAmount, nullptr));
 
-    randomFilters->setValue (pluginState.getProperty (Tags::randomFilters), dontSendNotification);
-    randomFilters->getValueObject().referTo (
-        pluginState.getPropertyAsValue (Tags::randomFilters, nullptr));
 
     crossfadeRate->setValue (pluginState.getProperty (Tags::crossfadeRate), dontSendNotification);
     crossfadeRate->getValueObject().referTo (
         pluginState.getPropertyAsValue (Tags::crossfadeRate, nullptr));
+
+    // AllPass gain controls
+    allpass1->setValue (pluginState.getProperty (Tags::allPassGain1, 1.0f), dontSendNotification);
+    allpass1->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::allPassGain1, nullptr));
+
+    allpass2->setValue (pluginState.getProperty (Tags::allPassGain2, 1.0f), dontSendNotification);
+    allpass2->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::allPassGain2, nullptr));
+
+    allpass3->setValue (pluginState.getProperty (Tags::allPassGain3, 0.0f), dontSendNotification);
+    allpass3->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::allPassGain3, nullptr));
+
+    allpass4->setValue (pluginState.getProperty (Tags::allPassGain4, 0.0f), dontSendNotification);
+    allpass4->getValueObject().referTo (
+        pluginState.getPropertyAsValue (Tags::allPassGain4, nullptr));
 
     // Update parameter value displays
     updateParameterValueDisplays ();
@@ -712,16 +779,13 @@ void PluginView::valueTreePropertyChanged (ValueTree& tree, const Identifier& pr
             combButtons.getUnchecked (i)->setToggleState (combs[i], dontSendNotification);
     } else if (property == Tags::enabledAllPasses) {
         allpasses.parseString (value.toString(), 2);
-        for (int i = 0; i < allPassButtons.size(); ++i)
-            allPassButtons.getUnchecked (i)->setToggleState (allpasses[i], dontSendNotification);
+        // Note: AllPass controls are now gain knobs, not toggle buttons
     } else if (property == Tags::randomEnabled) {
         randomEnabled->setToggleState ((float)value > 0.5f, dontSendNotification);
     } else if (property == Tags::randomRate) {
         randomRate->setValue (value, dontSendNotification);
     } else if (property == Tags::randomAmount) {
         randomAmount->setValue (value, dontSendNotification);
-    } else if (property == Tags::randomFilters) {
-        randomFilters->setValue (value, dontSendNotification);
     } else if (property == Tags::crossfadeRate) {
         crossfadeRate->setValue (value, dontSendNotification);
     }
@@ -754,16 +818,6 @@ void PluginView::updateParameterValueDisplays () {
     String amountText = String(amountPercent) + "%";
     randomAmountValueLabel->setText (amountText, dontSendNotification);
 
-    // Update filters display
-    int filtersValue = (int)randomFilters->getValue();
-    String filtersText;
-    switch (filtersValue) {
-        case 0: filtersText = "COMB"; break;
-        case 1: filtersText = "ALLPASS"; break;
-        case 2: filtersText = "BOTH"; break;
-        default: filtersText = "BOTH"; break;
-    }
-    randomFiltersValueLabel->setText (filtersText, dontSendNotification);
 
     // Update crossfade display
     int crossfadeValue = (int)crossfadeRate->getValue();

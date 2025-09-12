@@ -165,10 +165,10 @@ private:
     std::unique_ptr<ToggleSwitch> comb3;
     std::unique_ptr<ToggleSwitch> comb7;
     std::unique_ptr<ToggleSwitch> comb8;
-    std::unique_ptr<ToggleSwitch> allpass1;
-    std::unique_ptr<ToggleSwitch> allpass2;
-    std::unique_ptr<ToggleSwitch> allpass3;
-    std::unique_ptr<ToggleSwitch> allpass4;
+    std::unique_ptr<SkinDial> allpass1;
+    std::unique_ptr<SkinDial> allpass2;
+    std::unique_ptr<SkinDial> allpass3;
+    std::unique_ptr<SkinDial> allpass4;
     std::unique_ptr<Label> label;
     std::unique_ptr<Label> label3;
     std::unique_ptr<TextButton> helpButton;
@@ -183,20 +183,23 @@ private:
     std::unique_ptr<ToggleSwitch> randomEnabled;
     std::unique_ptr<SkinDial> randomRate;
     std::unique_ptr<SkinDial> randomAmount;
-    std::unique_ptr<SkinDial> randomFilters;
     std::unique_ptr<Label> randomEnabledLabel;
     std::unique_ptr<Label> randomRateLabel;
     std::unique_ptr<Label> randomAmountLabel;
-    std::unique_ptr<Label> randomFiltersLabel;
     std::unique_ptr<Label> randomRateValueLabel;
     std::unique_ptr<Label> randomAmountValueLabel;
-    std::unique_ptr<Label> randomFiltersValueLabel;
     std::unique_ptr<Label> randomEnabledStateLabel;
 
     // Crossfade control
     std::unique_ptr<SkinDial> crossfadeRate;
     std::unique_ptr<Label> crossfadeRateLabel;
     std::unique_ptr<Label> crossfadeRateValueLabel;
+
+    // AllPass knob labels
+    std::unique_ptr<Label> allpass1Label;
+    std::unique_ptr<Label> allpass2Label;
+    std::unique_ptr<Label> allpass3Label;
+    std::unique_ptr<Label> allpass4Label;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginView)

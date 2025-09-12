@@ -16,7 +16,7 @@ AboutBox::AboutBox() {
     //[/Constructor_pre]
 
     pluginLabel.reset (new Label ("pluginLabel",
-                                  TRANS ("SYNC_ROBO_VERB")));
+                                  TRANS ("SYNC_ROBO_VERB AP")));
     addAndMakeVisible (pluginLabel.get());
     pluginLabel->setFont (Font (FontOptions (24.00f, Font::plain)).withTypefaceStyle ("Regular"));
     pluginLabel->setJustificationType (Justification::centred);

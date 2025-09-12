@@ -32,8 +32,9 @@ void TempoSyncedRandomizer::randomizeSwitches(SyncRoboVerb& verb) {
         case AllPassOnly:
             for (int i = 0; i < SyncRoboVerb::numAllPasses; ++i) {
                 if (rng.nextFloat() < amount) {
-                    bool currentState = verb.toggledAllPassFloat(i) > 0.5f;
-                    verb.setAllPassToggle(i, !currentState);
+                    // Randomize AllPass gain (0.0 to 1.0)
+                    float newGain = rng.nextFloat();
+                    verb.setAllPassGain(i, newGain);
                 }
             }
             break;
@@ -47,11 +48,12 @@ void TempoSyncedRandomizer::randomizeSwitches(SyncRoboVerb& verb) {
                     verb.setCombToggle(i, !currentState);
                 }
             }
-            // Randomize all-pass filters
+            // Randomize all-pass filters (now using gain control)
             for (int i = 0; i < SyncRoboVerb::numAllPasses; ++i) {
                 if (rng.nextFloat() < amount) {
-                    bool currentState = verb.toggledAllPassFloat(i) > 0.5f;
-                    verb.setAllPassToggle(i, !currentState);
+                    // Randomize AllPass gain (0.0 to 1.0)
+                    float newGain = rng.nextFloat();
+                    verb.setAllPassGain(i, newGain);
                 }
             }
             break;

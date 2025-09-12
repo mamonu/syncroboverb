@@ -1,7 +1,7 @@
 # SyncRoboVerb CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.22)
-project(SyncRoboVerb VERSION 0.8.0)
+project(SyncRoboVerbAP VERSION 0.8.0)
 
 # Build numbering system
 if(EXISTS "${CMAKE_SOURCE_DIR}/build_number.txt")
@@ -37,9 +37,9 @@ juce_add_plugin(SyncRoboVerb
     PLUGIN_CODE Ulbs                            # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS AU VST3                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    PRODUCT_NAME "SyncRoboVerb")                        # The name of the final executable, which can differ from the target name
+    PRODUCT_NAME "SyncRoboVerbAP")                        # The name of the final executable, which can differ from the target name
 clap_juce_extensions_plugin(TARGET SyncRoboVerb
-    CLAP_ID "net.kushview.SyncRoboVerb"
+    CLAP_ID "net.kushview.SyncRoboVerbAP"
     CLAP_FEATURES reverb)
 
 target_include_directories(SyncRoboVerb PUBLIC

@@ -70,6 +70,18 @@ float Processor::getParameter (int index) {
             case SyncRoboVerb::CrossfadeRate:
                 return p.crossfadeRate;
                 break;
+            case SyncRoboVerb::AllPassGain1:
+                return p.allPassGain1;
+                break;
+            case SyncRoboVerb::AllPassGain2:
+                return p.allPassGain2;
+                break;
+            case SyncRoboVerb::AllPassGain3:
+                return p.allPassGain3;
+                break;
+            case SyncRoboVerb::AllPassGain4:
+                return p.allPassGain4;
+                break;
         }
     }
 
@@ -146,6 +158,18 @@ void Processor::setParameter (int index, float newValue) {
                 verb.getCrossfadeManager().setCrossfadeTiming(static_cast<TempoSyncedCrossfadeManager::CrossfadeTiming>(
                     juce::jlimit(0, TempoSyncedCrossfadeManager::numTimings - 1, (int)newValue)));
                 break;
+            case SyncRoboVerb::AllPassGain1:
+                params.allPassGain1 = juce::jlimit(0.0f, 1.0f, newValue);
+                break;
+            case SyncRoboVerb::AllPassGain2:
+                params.allPassGain2 = juce::jlimit(0.0f, 1.0f, newValue);
+                break;
+            case SyncRoboVerb::AllPassGain3:
+                params.allPassGain3 = juce::jlimit(0.0f, 1.0f, newValue);
+                break;
+            case SyncRoboVerb::AllPassGain4:
+                params.allPassGain4 = juce::jlimit(0.0f, 1.0f, newValue);
+                break;
         }
 
         ScopedLock lock (getCallbackLock());
@@ -197,6 +221,18 @@ String Processor::getParameterName (int index, int) {
             break;
         case SyncRoboVerb::CrossfadeRate:
             return "Crossfade rate";
+            break;
+        case SyncRoboVerb::AllPassGain1:
+            return "AllPass Gain 1";
+            break;
+        case SyncRoboVerb::AllPassGain2:
+            return "AllPass Gain 2";
+            break;
+        case SyncRoboVerb::AllPassGain3:
+            return "AllPass Gain 3";
+            break;
+        case SyncRoboVerb::AllPassGain4:
+            return "AllPass Gain 4";
             break;
     }
 
