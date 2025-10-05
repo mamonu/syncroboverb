@@ -39,10 +39,21 @@ SyncRoboVerb builds upon the excellent foundation of the original Roboverb plugi
 SyncRoboVerb can be built with CMake.
 
 ```bash
+# Install dependencies if needed
+brew install cmake ninja
+
+# Initialize submodules (same as before)
 git submodule update --init --recursive --depth=1
-cmake -Bbuild -GNinja
+
+# Configure the build (for Apple Silicon)
+cmake -Bbuild -GNinja -DCMAKE_OSX_ARCHITECTURES=arm64
+
+# Or, if you must build Intel versions (for older hosts)
+# cmake -Bbuild -GNinja -DCMAKE_OSX_ARCHITECTURES=x86_64
+
+# Build the plugin
 cd build
-ninja -j4
+ninja -j8
 ```
 
 ## macOS Installation Note
