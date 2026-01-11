@@ -5,7 +5,7 @@
 //[/Headers]
 
 #include "aboutbox.hpp"
-#include "buildinfo.h"
+#include "Version.h"
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 //[/MiscUserDefs]

@@ -210,16 +210,16 @@ public:
     /** Holds the parameters being used by a Reverb object. */
     struct Parameters {
         Parameters() noexcept
-            : roomSize (0.5f),
+            : roomSize (0.8f),
               damping (0.5f),
               wetLevel (0.33f),
               dryLevel (0.4f),
               width (1.0f),
               freezeMode (0),
               randomEnabled (0.0f),
-              randomRate (2.0f),
+              randomRate (4.0f),
               randomAmount (0.5f),
-              randomFilters (2.0f),
+              randomFilters (0.0f),
               crossfadeRate (2.0f) {}
 
         float roomSize;   /**< Room size, 0 to 1.0, where 1.0 is big, 0 is small. */

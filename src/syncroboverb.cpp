@@ -8,6 +8,11 @@ void TempoSyncedRandomizer::processTempo(double bpm, double ppqPosition, SyncRob
     
     double interval = getRateInQuarterNotes();
     
+    // Handle loop/restart: if ppqPosition went backwards, reset tracking
+    if (ppqPosition < lastPpqPosition) {
+        lastPpqPosition = ppqPosition;
+    }
+    
     // Check if we've moved past the next trigger point
     if (ppqPosition - lastPpqPosition >= interval) {
         randomizeSwitches(verb);

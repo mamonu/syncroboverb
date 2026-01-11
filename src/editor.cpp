@@ -26,12 +26,12 @@ Editor::~Editor()
 
 void Editor::paint (Graphics& g)
 {
-    g.fillAll (Colours::white);
+    g.fillAll (Colours::black);
 }
 
 void Editor::resized()
 {
-
+    view->setBounds (getLocalBounds());
 }
 
 void Editor::timerCallback()

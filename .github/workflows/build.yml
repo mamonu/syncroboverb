@@ -1,0 +1,66 @@
+name: Build Plugin
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (e.g., 1.0)'
+        required: true
+        default: '1.0'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            name: Windows
+            artifact: SyncRoboVerb-Windows
+          - os: macos-latest
+            name: macOS
+            artifact: SyncRoboVerb-macOS
+
+    runs-on: ${{ matrix.os }}
+    name: Build ${{ matrix.name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set version string
+        id: version
+        shell: bash
+        run: |
+          DATE_SUFFIX=$(date +%Y%m%d)
+          FULL_VERSION="${{ github.event.inputs.version }}.${DATE_SUFFIX}"
+          echo "version=${FULL_VERSION}" >> $GITHUB_OUTPUT
+          echo "Building version: ${FULL_VERSION}"
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DPLUGIN_VERSION="${{ steps.version.outputs.version }}"
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Prepare artifacts (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          cp -r build/SyncRoboVerb_artefacts/Release/VST3/*.vst3 artifacts/ || true
+
+      - name: Prepare artifacts (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          mkdir -p artifacts
+          cp -r build/SyncRoboVerb_artefacts/Release/VST3/*.vst3 artifacts/ || true
+          cp -r build/SyncRoboVerb_artefacts/Release/AU/*.component artifacts/ || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}-${{ steps.version.outputs.version }}
+          path: artifacts/

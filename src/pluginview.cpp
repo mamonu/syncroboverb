@@ -4,7 +4,7 @@
 #include "syncroboverb.hpp"
 #include "spherescope.hpp"
 #include "aboutbox.hpp"
-#include "buildinfo.h"
+#include "Version.h"
 #include "pluginview.hpp"
 
 namespace syncroboverb {
@@ -375,7 +375,7 @@ PluginView::PluginView() {
     crossfadeRateLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
     crossfadeRateLabel->setColour (TextEditor::textColourId, Colours::black);
     crossfadeRateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-    crossfadeRateLabel->setBounds (360, 204, 80, 24);
+    crossfadeRateLabel->setBounds (440, 146, 80, 24);
 
     crossfadeRateValueLabel.reset (new Label ("crossfadeRateValueLabel", TRANS ("1/32")));
     addAndMakeVisible (crossfadeRateValueLabel.get());
@@ -385,7 +385,7 @@ PluginView::PluginView() {
     crossfadeRateValueLabel->setColour (Label::textColourId, Colour (0xe4dfddaf));
     crossfadeRateValueLabel->setColour (TextEditor::textColourId, Colours::black);
     crossfadeRateValueLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-    crossfadeRateValueLabel->setBounds (380, 220, 56, 16);
+    crossfadeRateValueLabel->setBounds (440, 170, 80, 16);
 
     randomEnabledStateLabel.reset (new Label ("randomEnabledStateLabel", TRANS ("OFF")));
     addAndMakeVisible (randomEnabledStateLabel.get());
@@ -397,7 +397,64 @@ PluginView::PluginView() {
     randomEnabledStateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
     randomEnabledStateLabel->setBounds (380, 110, 40, 16);
 
-    drawable1 = Drawable::createFromImageData (res::syncroboverb_bg_jpg, res::syncroboverb_bg_jpgSize);
+    // Preset buttons
+    presetA.reset (new TextButton ("presetA"));
+    addAndMakeVisible (presetA.get());
+    presetA->setButtonText ("A");
+    presetA->addListener (this);
+    presetA->setColour (TextButton::buttonColourId, Colour (0xff3a3a3a));
+    presetA->setColour (TextButton::textColourOffId, Colour (0xffe5e5e5));
+    presetA->setBounds (492, 10, 28, 24);
+
+    presetB.reset (new TextButton ("presetB"));
+    addAndMakeVisible (presetB.get());
+    presetB->setButtonText ("B");
+    presetB->addListener (this);
+    presetB->setColour (TextButton::buttonColourId, Colour (0xff3a3a3a));
+    presetB->setColour (TextButton::textColourOffId, Colour (0xffe5e5e5));
+    presetB->setBounds (524, 10, 28, 24);
+
+    presetC.reset (new TextButton ("presetC"));
+    addAndMakeVisible (presetC.get());
+    presetC->setButtonText ("C");
+    presetC->addListener (this);
+    presetC->setColour (TextButton::buttonColourId, Colour (0xff3a3a3a));
+    presetC->setColour (TextButton::textColourOffId, Colour (0xffe5e5e5));
+    presetC->setBounds (556, 10, 28, 24);
+
+    presetD.reset (new TextButton ("presetD"));
+    addAndMakeVisible (presetD.get());
+    presetD->setButtonText ("D");
+    presetD->addListener (this);
+    presetD->setColour (TextButton::buttonColourId, Colour (0xff3a3a3a));
+    presetD->setColour (TextButton::textColourOffId, Colour (0xffe5e5e5));
+    presetD->setBounds (588, 10, 28, 24);
+
+    presetE.reset (new TextButton ("presetE"));
+    addAndMakeVisible (presetE.get());
+    presetE->setButtonText ("E");
+    presetE->addListener (this);
+    presetE->setColour (TextButton::buttonColourId, Colour (0xff3a3a3a));
+    presetE->setColour (TextButton::textColourOffId, Colour (0xffe5e5e5));
+    presetE->setBounds (620, 10, 28, 24);
+
+    presetF.reset (new TextButton ("presetF"));
+    addAndMakeVisible (presetF.get());
+    presetF->setButtonText ("F");
+    presetF->addListener (this);
+    presetF->setColour (TextButton::buttonColourId, Colour (0xff3a3a3a));
+    presetF->setColour (TextButton::textColourOffId, Colour (0xffe5e5e5));
+    presetF->setBounds (652, 10, 28, 24);
+
+    presetG.reset (new TextButton ("presetG"));
+    addAndMakeVisible (presetG.get());
+    presetG->setButtonText ("G");
+    presetG->addListener (this);
+    presetG->setColour (TextButton::buttonColourId, Colour (0xff3a3a3a));
+    presetG->setColour (TextButton::textColourOffId, Colour (0xffe5e5e5));
+    presetG->setBounds (684, 10, 28, 24);
+
+    drawable1 = Drawable::createFromImageData (res::syncroboverb_bg_png, res::syncroboverb_bg_pngSize);
 
     //[UserPreSize]
     combButtons.add (comb1.get());
@@ -427,7 +484,7 @@ PluginView::PluginView() {
 
     //[Constructor] You can add your own custom stuff here..
     about.setPluginName ("SYNC_ROBO_VERB");
-    about.setPluginVersion (String("v1.2.0 ") + String(BUILD_ID));
+    about.setPluginVersion (String("v") + String(PLUGIN_VERSION_STRING));
     about.setPluginUrl ("mamonulabs", "https://mamonulabs.github.io");
     pluginState.addListener (this);
     //[/Constructor]
@@ -487,6 +544,15 @@ PluginView::~PluginView() {
     crossfadeRate = nullptr;
     crossfadeRateLabel = nullptr;
     crossfadeRateValueLabel = nullptr;
+
+    // Preset buttons
+    presetA = nullptr;
+    presetB = nullptr;
+    presetC = nullptr;
+    presetD = nullptr;
+    presetE = nullptr;
+    presetF = nullptr;
+    presetG = nullptr;
 
     //[Destructor]. You can add your own custom destruction code here..
     //[/Destructor]
@@ -592,6 +658,20 @@ void PluginView::buttonClicked (Button* buttonThatWasClicked) {
         pluginState.setProperty (Tags::randomEnabled, randomEnabled->getToggleState() ? 1.0f : 0.0f, nullptr);
         updateParameterValueDisplays ();
         //[/UserButtonCode_randomEnabled]
+    } else if (buttonThatWasClicked == presetA.get()) {
+        applyPresetA();
+    } else if (buttonThatWasClicked == presetB.get()) {
+        applyPresetB();
+    } else if (buttonThatWasClicked == presetC.get()) {
+        applyPresetC();
+    } else if (buttonThatWasClicked == presetD.get()) {
+        applyPresetD();
+    } else if (buttonThatWasClicked == presetE.get()) {
+        applyPresetE();
+    } else if (buttonThatWasClicked == presetF.get()) {
+        applyPresetF();
+    } else if (buttonThatWasClicked == presetG.get()) {
+        applyPresetG();
     }
 
     //[UserbuttonClicked_Post]
@@ -788,6 +868,77 @@ void PluginView::mouseDown (const MouseEvent& ev) {
     if (about.isVisible())
         about.setVisible (false);
     Component::mouseDown (ev);
+}
+
+void PluginView::applyPresetA() {
+    // A: RATE 1/4, small size, small width, filters COMB
+    pluginState.setProperty (Tags::randomRate, 2.0f, nullptr);      // 1/4 note
+    pluginState.setProperty (Tags::roomSize, 0.25f, nullptr);       // small size
+    pluginState.setProperty (Tags::width, 0.25f, nullptr);          // small width
+    pluginState.setProperty (Tags::randomFilters, 0.0f, nullptr);   // COMB only
+    updateParameterValueDisplays();
+}
+
+void PluginView::applyPresetB() {
+    // B: RATE 1 bar, large size, filters COMB
+    pluginState.setProperty (Tags::randomRate, 4.0f, nullptr);      // 1 bar (whole note)
+    pluginState.setProperty (Tags::roomSize, 0.8f, nullptr);        // large size
+    pluginState.setProperty (Tags::randomFilters, 0.0f, nullptr);   // COMB only
+    updateParameterValueDisplays();
+}
+
+void PluginView::applyPresetC() {
+    // C: RATE 2 bars, large size, filters ALL (Both)
+    pluginState.setProperty (Tags::randomRate, 5.0f, nullptr);      // 2 bars
+    pluginState.setProperty (Tags::roomSize, 0.8f, nullptr);        // large size
+    pluginState.setProperty (Tags::randomFilters, 2.0f, nullptr);   // BOTH
+    updateParameterValueDisplays();
+}
+
+void PluginView::applyPresetD() {
+    // D: Shimmer - fast rate, high damping, wide, allpass focus
+    pluginState.setProperty (Tags::randomRate, 0.0f, nullptr);      // 1/16 note (fast shimmer)
+    pluginState.setProperty (Tags::roomSize, 0.6f, nullptr);        // medium-large size
+    pluginState.setProperty (Tags::damping, 0.7f, nullptr);         // high damping for smoothness
+    pluginState.setProperty (Tags::width, 0.9f, nullptr);           // wide stereo
+    pluginState.setProperty (Tags::randomFilters, 1.0f, nullptr);   // ALLPASS only
+    pluginState.setProperty (Tags::randomAmount, 0.3f, nullptr);    // subtle changes
+    updateParameterValueDisplays();
+}
+
+void PluginView::applyPresetE() {
+    // E: Chaos - very fast, high amount, both filters
+    pluginState.setProperty (Tags::randomRate, 0.0f, nullptr);      // 1/16 note
+    pluginState.setProperty (Tags::roomSize, 0.5f, nullptr);        // medium size
+    pluginState.setProperty (Tags::damping, 0.3f, nullptr);         // low damping (bright)
+    pluginState.setProperty (Tags::width, 1.0f, nullptr);           // full width
+    pluginState.setProperty (Tags::randomFilters, 2.0f, nullptr);   // BOTH
+    pluginState.setProperty (Tags::randomAmount, 0.8f, nullptr);    // high randomization
+    updateParameterValueDisplays();
+}
+
+void PluginView::applyPresetF() {
+    // F: Ambient Pad - slow evolution, large space
+    pluginState.setProperty (Tags::randomRate, 7.0f, nullptr);      // 8 bars (very slow)
+    pluginState.setProperty (Tags::roomSize, 0.95f, nullptr);       // huge room
+    pluginState.setProperty (Tags::damping, 0.6f, nullptr);         // warm
+    pluginState.setProperty (Tags::width, 0.7f, nullptr);           // moderate width
+    pluginState.setProperty (Tags::wetLevel, 0.5f, nullptr);        // more wet
+    pluginState.setProperty (Tags::randomFilters, 2.0f, nullptr);   // BOTH
+    pluginState.setProperty (Tags::randomAmount, 0.4f, nullptr);    // gentle changes
+    updateParameterValueDisplays();
+}
+
+void PluginView::applyPresetG() {
+    // G: Rhythmic Gate - synced to beat, punchy
+    pluginState.setProperty (Tags::randomRate, 1.0f, nullptr);      // 1/8 note
+    pluginState.setProperty (Tags::roomSize, 0.4f, nullptr);        // smaller room
+    pluginState.setProperty (Tags::damping, 0.2f, nullptr);         // bright/sharp
+    pluginState.setProperty (Tags::width, 0.5f, nullptr);           // focused
+    pluginState.setProperty (Tags::dryLevel, 0.5f, nullptr);        // more dry
+    pluginState.setProperty (Tags::randomFilters, 0.0f, nullptr);   // COMB only
+    pluginState.setProperty (Tags::randomAmount, 0.6f, nullptr);    // moderate randomization
+    updateParameterValueDisplays();
 }
 
 }

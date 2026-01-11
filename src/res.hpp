@@ -10,8 +10,8 @@ const int red_knob_pngSize = 546683;
 extern const unsigned char sphere_scope_png[];
 const int sphere_scope_pngSize = 2034111;
 
-extern const unsigned char syncroboverb_bg_jpg[];
-const int syncroboverb_bg_jpgSize = 432442;
+extern const unsigned char syncroboverb_bg_png[];
+const int syncroboverb_bg_pngSize = 251989;
 
 extern const unsigned char toggle_switch_png[];
 const int toggle_switch_pngSize = 20873;

@@ -198,6 +198,23 @@ private:
     std::unique_ptr<Label> crossfadeRateLabel;
     std::unique_ptr<Label> crossfadeRateValueLabel;
 
+    // Preset buttons
+    std::unique_ptr<TextButton> presetA;
+    std::unique_ptr<TextButton> presetB;
+    std::unique_ptr<TextButton> presetC;
+    std::unique_ptr<TextButton> presetD;
+    std::unique_ptr<TextButton> presetE;
+    std::unique_ptr<TextButton> presetF;
+    std::unique_ptr<TextButton> presetG;
+
+    void applyPresetA();
+    void applyPresetB();
+    void applyPresetC();
+    void applyPresetD();
+    void applyPresetE();
+    void applyPresetF();
+    void applyPresetG();
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginView)
 };
